@@ -1,0 +1,68 @@
+# Secrets - never in Git
+.env
+.env.*
+!.env.example
+
+# Keys and credentials, in any form
+*.pem
+*.key
+*.p12
+*.pfx
+credentials*.json
+client_secret*.json
+token*.json
+
+# Runtime data: everything the server writes. Only the example project list
+# is versioned.
+date/*
+!date/proiecte.json
+
+# Open WebUI volume, kiosk browser profile, downloaded clips and tools
+date-openwebui/
+chrome-profil/
+media/
+
+# Virtual environments and packages
+.venv/
+venv/
+env/
+node_modules/
+
+# Python generated files
+__pycache__/
+*.pyc
+
+# Build output and tool caches
+build/
+dist/
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Logs
+logs/
+*.log
+
+# Local databases and backups
+*.db
+*.sqlite
+*.sqlite3
+*.bak
+*.backup
+
+# Temporary files
+tmp-*
+*.tmp
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Local editor settings
+.vscode/
+.idea/
+.claude/settings.local.json
+*.swp
+*~

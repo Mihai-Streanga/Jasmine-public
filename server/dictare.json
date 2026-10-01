@@ -1,0 +1,28 @@
+{
+  "model_igpu": "OpenVINO/whisper-large-v3-turbo-int8-ov",
+  "dispozitiv_igpu": "GPU",
+  "granita_igpu": 600,
+  "hotwords": "Jasmine, Sky, Socrate, Ramana, engage, disengage, Claude, Sonnet, Open WebUI, Docker, endpoint, commit, branch, backlog, handoff, punte, kiosk, RECON, COMMS, SENSORS, AGORA, MCP, Whisper, PowerShell, Chrome, JSON, API",
+
+  "model": "large-v3-turbo",
+  "device": "cpu",
+  "compute_type": "int8",
+  "cpu_threads": 8,
+
+  "limba": "ro",
+  "prag_tacere_secunde": 2,
+  "secunde_razgandire": 0,
+  "prag_volum": 0.012,
+  "secunde_minim_vorbire": 0.15,
+  "secunde_incredere_vorbire": 0.4,
+  "beam_size": 1,
+
+  "cuvant_trezire": ["engage", "start"],
+  "cuvant_adormire": ["disengage", "stop"],
+  "trezire_maxim_secunde": 3.0,
+  "trezire_prag_tacere": 0.7,
+  "trezire_prag_volum": 0.006,
+  "trezire_minim_vorbire": 0.15,
+
+  "prompt_initial": "Discuție despre Jasmine, cu straturile Sky, Socrate și Ramana. Comenzi: engage, disengage. Termeni: Claude, Sonnet, Open WebUI, Docker, endpoint, commit, branch, mail, backlog, handoff, punte, kiosk, RECON, MCP, Whisper, PowerShell, Chrome, JSON, API."
+}

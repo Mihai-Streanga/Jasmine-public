@@ -1,0 +1,25 @@
+# Exact versions the project was tested with, on Python 3.14 (Windows 11).
+
+# server
+fastapi==0.142.2
+uvicorn==0.54.0
+starlette==1.7.0
+pydantic==2.13.5
+httpx==0.28.1
+python-dotenv==1.2.3
+python-multipart==0.0.32
+
+# MCP client, used to talk to Agent 051. Version 2 has not been tested.
+mcp[cli]==1.30.0
+
+# dictation: OpenVINO on the integrated GPU, faster-whisper as fallback
+openvino==2026.4.0
+openvino-genai==2026.4.0.0
+openvino-tokenizers==2026.4.0.0
+huggingface_hub==1.33.0
+faster-whisper==1.2.1
+ctranslate2==4.8.2
+numpy==2.5.3
+# av 19.0.0 ships an unsigned codec module that Windows Application Control
+# may block, which breaks audio decoding for both engines.
+av==18.0.0

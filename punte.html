@@ -1,0 +1,3659 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>JA.S.Mine — Puntea</title>
+<style>
+/* FONTURILE STAU ÎN CASĂ, nu la Google. O foaie de stil externă blochează
+   primul desen, iar pe mașina asta rezolvarea numelui costă 2,0 s — plătite la
+   FIECARE deschidere, fiindcă `pregateste-chrome.py` golește cache-ul kiosk-ului.
+   Nu fonturile costau, ci numele lor; ceasul de 2,0 s se OCOLEȘTE, nu se repară.
+
+   Doar latin și latin-ext, cele șase grosimi. Latin-ext nu e opțional: ă, ș și
+   ț stau acolo (â și î sunt în latin). Fișierele: `fonturi/`,
+   servite de `/fonturi/{nume}` din `server.py`. Licențe OFL amândouă.
+
+   Puntea nu cere nimic din afară ca să se deseneze. */
+@font-face{font-family:'IBM Plex Mono';font-style:normal;font-weight:400;font-display:swap;
+  src:url(/fonturi/ibm-plex-mono-400-latin-ext.woff2) format('woff2');
+  unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF}
+@font-face{font-family:'IBM Plex Mono';font-style:normal;font-weight:400;font-display:swap;
+  src:url(/fonturi/ibm-plex-mono-400-latin.woff2) format('woff2');
+  unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+@font-face{font-family:'IBM Plex Mono';font-style:normal;font-weight:500;font-display:swap;
+  src:url(/fonturi/ibm-plex-mono-500-latin-ext.woff2) format('woff2');
+  unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF}
+@font-face{font-family:'IBM Plex Mono';font-style:normal;font-weight:500;font-display:swap;
+  src:url(/fonturi/ibm-plex-mono-500-latin.woff2) format('woff2');
+  unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+@font-face{font-family:'Saira Condensed';font-style:normal;font-weight:400;font-display:swap;
+  src:url(/fonturi/saira-condensed-400-latin-ext.woff2) format('woff2');
+  unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF}
+@font-face{font-family:'Saira Condensed';font-style:normal;font-weight:400;font-display:swap;
+  src:url(/fonturi/saira-condensed-400-latin.woff2) format('woff2');
+  unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+@font-face{font-family:'Saira Condensed';font-style:normal;font-weight:500;font-display:swap;
+  src:url(/fonturi/saira-condensed-500-latin-ext.woff2) format('woff2');
+  unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF}
+@font-face{font-family:'Saira Condensed';font-style:normal;font-weight:500;font-display:swap;
+  src:url(/fonturi/saira-condensed-500-latin.woff2) format('woff2');
+  unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+@font-face{font-family:'Saira Condensed';font-style:normal;font-weight:600;font-display:swap;
+  src:url(/fonturi/saira-condensed-600-latin-ext.woff2) format('woff2');
+  unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF}
+@font-face{font-family:'Saira Condensed';font-style:normal;font-weight:600;font-display:swap;
+  src:url(/fonturi/saira-condensed-600-latin.woff2) format('woff2');
+  unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+@font-face{font-family:'Saira Condensed';font-style:normal;font-weight:700;font-display:swap;
+  src:url(/fonturi/saira-condensed-700-latin-ext.woff2) format('woff2');
+  unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF}
+@font-face{font-family:'Saira Condensed';font-style:normal;font-weight:700;font-display:swap;
+  src:url(/fonturi/saira-condensed-700-latin.woff2) format('woff2');
+  unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+:root{
+  --hull:#06080C;
+  --live:#E7DDC8;
+  --lamp:#F0A342;
+  --ice:#9FD4F5;
+  --ice-dim:#5E7E96;
+  /* Chihlimbariu de accent — mai aprins decât --lamp, pentru ce cere ochiul
+     ACUM: butonul principal din RECON, pragul de tokeni. O variabilă nedefinită
+     nu dă eroare, doar înghite regula în tăcere. */
+  --gold:#FFC46B;
+  /* Roșul irisului, același cu `IRIS` din desen (192,86,58). */
+  --iris:#C0563A;
+  --mono:"IBM Plex Mono",ui-monospace,monospace;
+  --lbl:"Saira Condensed",system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden}
+body{background:var(--hull);color:var(--ice);font-family:var(--mono);-webkit-font-smoothing:antialiased}
+canvas#scene{position:fixed;inset:0;width:100%;height:100%;display:block}
+.hud-top{position:fixed;top:0;left:0;right:0;z-index:5;pointer-events:none;display:flex;justify-content:space-between;align-items:flex-start;padding:20px 28px}
+/* Fără `text-transform:uppercase`: forma citită a numelui e `JA.S.Mine`, cu
+   majuscule exact pe cele trei straturi, iar `uppercase` ar șterge distincția. */
+/* Literele mici — restul numelui — pe roșu; `JA`, `S` și `M` rămân chihlimbarii,
+   fiindcă ele sunt cele trei straturi, iar chihlimbariul înseamnă „viu". */
+.mark{font-family:var(--lbl);font-weight:700;font-size:24px;letter-spacing:.46em;text-transform:none;color:var(--iris)}
+.mark span{color:var(--lamp)}
+/* Data stelară și rândul „SISTEME ACTIVE N" sunt pe roșul irisului: pe punte nu
+   e nimic argintiu. Se schimbă CLASELE, nu `--ice-dim`: variabila e citită de
+   vreo cincisprezece locuri din panouri, bule și liste. `--iris` are contrast
+   4,4:1 pe `--hull`, `--ice-dim` 4,7:1 — aceeași greutate, altă nuanță. Cifra
+   din `.hud-r b` rămâne chihlimbarie: ea e ce se citește, restul e etichetă. */
+.sub{font-size:10px;color:var(--iris);letter-spacing:.08em;margin-top:6px}
+.hud-r{font-family:var(--lbl);font-weight:600;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--iris);text-align:right;line-height:1.8}
+.hud-r b{color:var(--lamp);font-weight:600}
+/* `pointer-events:auto` fiindcă .hud-top e transparentă la mouse — altfel
+   click-ul ar trece prin buton și ar ateriza pe hartă. */
+.x{pointer-events:auto;background:transparent;border:0;cursor:pointer;
+   color:var(--ice-dim);font-family:var(--mono);font-size:20px;line-height:1;
+   padding:6px 2px 0;opacity:.45;transition:opacity .2s,color .2s}
+.x:hover,.x:focus-visible{opacity:1;color:var(--iris)}
+.hud-bot{position:fixed;bottom:0;left:0;right:0;z-index:5;pointer-events:none;font-size:9.5px;color:#3A4C5C;letter-spacing:.05em;padding:14px 28px;text-align:center;line-height:1.7}
+.sheet{position:fixed;left:5%;top:50%;z-index:20;width:min(430px,44vw);max-height:74vh;transform:translateY(-50%) translateX(-30px);opacity:0;pointer-events:none;background:rgba(8,13,19,.78);backdrop-filter:blur(4px);border:1px solid rgba(159,212,245,.22);border-left:2px solid var(--lamp);padding:22px 26px 24px;display:flex;flex-direction:column;transition:opacity .4s ease .2s,transform .55s cubic-bezier(.22,.9,.24,1) .2s}
+.sheet.open{opacity:1;pointer-events:auto;transform:translateY(-50%) translateX(0)}
+.sheet h2{font-family:var(--lbl);font-weight:600;font-size:19px;letter-spacing:.3em;text-transform:uppercase;color:var(--ice)}
+.sheet .st{font-size:11.5px;color:var(--ice-dim);margin-top:6px;letter-spacing:.05em}
+.sheet .sc{margin-top:16px;overflow-y:auto;flex:1;min-height:0}
+/* Bara de derulare stă ÎN panou, deci ar mânca din marginea dreaptă. Marginea
+   negativă lărgește zona de derulat până aproape de ramă, iar padding-ul aduce
+   conținutul înapoi la aceeași distanță ca în stânga: bara trăiește în marginea
+   din dreapta, nu în coloana de citit.
+   Doar panourile mici: la cele mari derularea e pe zona de mesaje, nu pe .sc. */
+.sheet:not(.mare) .sc{margin-right:-19px;padding-right:19px;
+  scrollbar-width:thin;scrollbar-color:rgba(159,212,245,.30) transparent}
+.close{position:absolute;top:14px;right:16px;background:transparent;border:0;color:var(--ice-dim);cursor:pointer;font-family:var(--lbl);font-size:11px;letter-spacing:.2em;text-transform:uppercase;padding:4px 6px;pointer-events:auto}
+.close:hover,.close:focus-visible{color:var(--lamp);outline:none}
+.row{display:grid;grid-template-columns:1fr auto;gap:14px;padding:10px 0;border-top:1px solid rgba(94,126,150,.26);font-size:13px;align-items:baseline;color:var(--live)}
+.row:first-child{border-top:0}
+.row .v{color:#8AAAC2;font-size:12px;white-space:nowrap}
+.row .v.w{color:var(--lamp)}
+.need{font-size:13px;color:var(--live);line-height:1.85;font-weight:500}
+.need em{font-style:normal;color:#8FADC2}
+.fld{display:flex;gap:8px;margin-bottom:13px}
+input{flex:1;background:rgba(4,7,10,.85);border:1px solid rgba(94,126,150,.35);color:var(--ice);font-family:var(--mono);font-size:12px;padding:10px 12px}
+input::placeholder{color:#4A6072}
+input:focus{outline:none;border-color:var(--lamp)}
+.btn{font-family:var(--lbl);font-weight:600;font-size:11px;letter-spacing:.16em;text-transform:uppercase;cursor:pointer;background:transparent;color:var(--lamp);border:1px solid var(--lamp);padding:0 14px}
+.btn:hover{background:rgba(240,163,66,.12)}
+.btn:focus-visible{outline:2px solid var(--ice);outline-offset:2px}
+.hint{font-size:11px;color:#7089A0;margin-top:11px;line-height:1.6}
+.empty{font-size:12.5px;color:#8FADC2;padding:4px 0}
+/* SENSORS. Nu .row, care e făcut pentru perechi cheie-valoare pe două coloane:
+   un titlu de știre are nevoie de toată lățimea, altfel se rupe în trei rânduri
+   înghesuite lângă o oră. Aici titlul e linkul, iar sursa și ora stau dedesubt. */
+.stire{padding:9px 0;border-top:1px solid rgba(94,126,150,.26);font-size:13px;line-height:1.5;color:var(--live)}
+.stire:first-child{border-top:0}
+.stire a{color:var(--live);text-decoration:none;border-bottom:1px solid rgba(94,126,150,.4)}
+.stire a:hover{color:var(--lamp);border-bottom-color:var(--lamp)}
+.stire .m{font-size:11px;color:#7089A0;margin-top:3px;letter-spacing:.04em}
+/* Ce a spus deja Sky rămâne pe ecran, dar stins: informația există oricum, iar
+   ascunsă ar face panoul să pară că pierde știri. */
+.stire.spusa{opacity:.45}
+.grup{font-family:var(--lbl);font-weight:600;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--lamp);margin:16px 0 2px}
+.grup.sus{margin-top:4px}
+
+/* ── Fereastra mare ──────────────────────────────────────────────────
+   Doar panourile care cer `mare:true`. Celelalte rămân la 430px: un panou
+   de citit nu câștigă nimic din lățime, doar rânduri lungi și obositoare.
+   Aici înălțimea e FIXĂ, nu max-height: dimensionat după conținut, chatul
+   ar crește cu fiecare replică și câmpul de scris ar sălta sub degete.
+   Cei 880px sunt lățimea la care coloana de conversații încape FĂRĂ să
+   fure din citit: bula rămâne la ~61 de caractere pe rând. */
+.sheet.mare{width:min(880px,68vw);height:78vh;max-height:78vh}
+/* Sub pragul din JS (vezi PRAG_LISTA) fereastra se îngustează. Pe ecran mic
+   lizibilitatea bate vizibilitatea listei: 880px într-o fereastră de 1280 ar
+   acoperi nodul și ar strânge bula. */
+.sheet.mare.ingust{width:min(660px,56vw)}
+/* Derularea coboară în zona de mesaje. Lăsată pe .sc, ar duce câmpul de
+   scris în afara ecranului odată cu mesajele vechi. */
+.sheet.mare .sc{overflow:hidden;display:flex;flex-direction:column}
+
+/* ── Chat ────────────────────────────────────────────────────────────
+   Bulele nu sunt colorate ca la mesagerie: doar o margine subțire care
+   spune cine vorbește. Omul la dreapta, chihlimbariu; Socrate la stânga,
+   gheață. Textul rămâne aliniat la stânga în ambele — un răspuns de zece
+   rânduri aliniat la dreapta nu se citește. */
+.chat{flex:1;min-height:0;display:flex;flex-direction:column}
+.chat-bar{display:flex;align-items:center;gap:12px;padding-bottom:11px;border-bottom:1px solid rgba(94,126,150,.26)}
+.chat-tit{flex:1;font-size:12.5px;color:var(--live);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chat-tok{font-size:11px;color:var(--ice-dim);white-space:nowrap;letter-spacing:.04em}
+.chat-tok.mult{color:var(--gold)}
+.chat-lung{font-size:10.5px;color:var(--gold);letter-spacing:.04em;padding:8px 0 0;text-align:right}
+.chat-mij{flex:1;min-height:0;display:flex;gap:16px;position:relative}
+.msgs{flex:1;min-width:0;min-height:0;overflow-y:auto;display:flex;flex-direction:column;gap:16px;padding:16px 2px}
+
+/* ── Lista conversațiilor ────────────────────────────────────────────
+   Coloană fixă la lățime, nu procentuală: crescând cu fereastra ar fura
+   din citit exact acolo unde e mai scump. */
+.lista{flex:0 0 180px;overflow-y:auto;padding:14px 12px 14px 0;border-right:1px solid rgba(94,126,150,.22)}
+/* Sub prag devine sertar peste zona de mesaje, deschis din buton. Fundal
+   aproape opac: sub el stau mesajele, nu peretele navei. */
+.sheet.mare.ingust .lista{position:absolute;left:0;top:0;bottom:0;z-index:3;width:212px;flex:none;
+  background:rgba(6,10,15,.97);border-right:1px solid rgba(159,212,245,.3);padding:14px 12px;display:none}
+.sheet.mare.ingust .lista.desfasurata{display:block}
+/* Butonul „Conversații" există doar cât lista nu încape lângă mesaje. */
+.doar-ingust{display:none}
+.sheet.mare.ingust .doar-ingust{display:block}
+.conv{position:relative;padding:9px 24px 9px 10px;cursor:pointer;border-left:2px solid transparent}
+.conv:hover{background:rgba(159,212,245,.06)}
+.conv.acum{border-left-color:var(--gold);background:rgba(255,196,107,.07)}
+.conv.acum .conv-t{color:var(--gold)}
+.conv-t{font-size:12px;line-height:1.5;color:var(--live);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.conv-m{font-size:10px;letter-spacing:.03em;color:var(--ice-dim);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+/* × apare la hover, dar rămâne ajuns din tastatură: focus-visible îl scoate. */
+.conv-x{position:absolute;top:6px;right:3px;background:transparent;border:0;color:var(--ice-dim);
+  font-family:var(--mono);font-size:14px;line-height:1;padding:3px 5px;cursor:pointer;opacity:0}
+.conv:hover .conv-x{opacity:.65}
+.conv-x:hover{opacity:1;color:#C0563A}
+.conv-x:focus-visible{opacity:1;outline:1px solid var(--lamp)}
+/* Jurnalul stă pe două rânduri per idee: sus data și ×, dedesubt textul, întins
+   pe toată lățimea; pe un singur rând textul s-ar strânge într-o coloană
+   îngustă. × e cât data, nu mai mare: e un gest de curățenie, nu un buton.
+   Stins, aprins la hover, ca la conversații. */
+.row.log-r{display:block}
+.log-cap{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:5px}
+/* × exact cât data și în aceeași culoare: aceeași familie de litere (nu mono),
+   12px, var(--lamp). Roșu numai sub mouse, când chiar e pe cale să scoată ceva. */
+.log-r .conv-x{position:static;font-family:inherit;font-size:12px;color:var(--lamp);
+  padding:0 0 0 8px}
+.log-r:hover .conv-x{opacity:1}
+.log-r .conv-x:hover{color:#C0563A}
+/* Aliniat pe amândouă marginile. Despărțirea în silabe nu e podoabă: fără ea,
+   „justify" pe o coloană îngustă lasă găuri albe între cuvinte. Merge fiindcă
+   <html lang="ro"> e scris — altfel Chrome n-ar ști după ce reguli să despartă. */
+.log-t{line-height:1.7;text-align:justify;hyphens:auto}
+.lista-nota{font-size:10.5px;color:#7089A0;line-height:1.5;padding:0 0 10px 10px}
+.bula{max-width:82%;font-size:13.5px;line-height:1.8;color:var(--live)}
+.bula .cine{font-family:var(--lbl);font-weight:600;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--ice-dim);margin-bottom:6px}
+.bula.om{align-self:flex-end;border-right:2px solid var(--lamp);padding-right:13px}
+.bula.om .cine{text-align:right;color:var(--lamp)}
+.bula.voce{align-self:flex-start;border-left:2px solid rgba(159,212,245,.45);padding-left:13px}
+.bula.rea{align-self:flex-start;border-left:2px solid #C0563A;padding-left:13px;color:#D9977E;font-size:12.5px}
+.bula.rea .cine{color:#C0563A}
+.bula .nota{font-size:10.5px;color:var(--gold);letter-spacing:.04em;margin-top:8px;opacity:.85}
+/* Linkurile din replici — vezi `corp()`. Adresa se rupe oriunde: un URL de
+   știre românească e titlul întreg scris cu cratime și ar lăți bula peste
+   ecran. */
+.bula a{color:var(--lamp);text-decoration:none;border-bottom:1px solid rgba(240,163,66,.45);word-break:break-all}
+.bula a:hover{border-bottom-color:var(--lamp)}
+/* ── MUNTELE: clipul ─────────────────────────────────────────────────
+   Clipul sus, conversația dedesubt: chatul peste clip ar fi greu de urmărit.
+
+   `flex:0 0 auto` plus `aspect-ratio`, nu o înălțime scrisă în pixeli: clipurile
+   au formate diferite (320x240, 1280x720, 480x360), iar o cutie fixă ar pune
+   chenare negre. Rama ține 16/9, iar `object-fit:contain` lasă fiecare clip să
+   intre în ea fără să fie tăiat. Plafon pe înălțime, ca pe o fereastră joasă să
+   rămână loc de conversație. */
+.munte-clip{position:relative;flex:0 0 auto;aspect-ratio:16/9;max-height:42%;
+  background:#05080c;border:1px solid rgba(159,212,245,.16);overflow:hidden;cursor:pointer}
+.munte-clip video{width:100%;height:100%;object-fit:contain;display:block}
+/* Semnul de stare. Regula „fără butoane" nu e încălcată: apăsabil e CLIPUL, ca
+   un nod sau un minipanou, iar ăsta e semnul lui — nu un control adăugat.
+   Există fiindcă altfel starea ar fi ascunsă: un clip oprit pe un cadru
+   fix nu se deosebește de unul care încă nu a pornit. */
+.munte-semn{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  opacity:0;transition:opacity .35s ease;pointer-events:none;background:rgba(5,8,12,.34)}
+.munte-clip:hover .munte-semn,.munte-clip.stat .munte-semn{opacity:1}
+.munte-semn i{display:block;width:0;height:0;border-style:solid;
+  border-width:13px 0 13px 22px;border-color:transparent transparent transparent var(--live);opacity:.9}
+.munte-clip:not(.stat) .munte-semn i{width:20px;height:26px;border:none;
+  border-left:7px solid var(--live);border-right:7px solid var(--live);opacity:.75}
+/* Titlul clipului, jos-stânga. Se citește din munte.json, nu se tastează. */
+.munte-tit{position:absolute;left:0;right:0;bottom:0;padding:16px 13px 7px;
+  font-family:var(--lbl);font-size:10px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--ice-dim);pointer-events:none;
+  background:linear-gradient(to top,rgba(5,8,12,.82),rgba(5,8,12,0))}
+/* Camera fără clipuri pe disc nu e o camera stricată: chatul merge întreg.
+   De-asta rama spune ce lipsește și cum se repară, în loc să dispară. */
+.munte-fara{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  text-align:center;padding:0 26px;font-size:11.5px;line-height:1.7;color:var(--ice-dim)}
+/* `display:flex` de mai sus BATE `[hidden]{display:none}` din foaia browserului —
+   o clasă din pagină învinge o regulă de agent utilizator la specificitate egală.
+   Fără rândul ăsta, `m-fara` rămâne întins peste tot clipul (`inset:0`) chiar și
+   ascuns: invizibil, dar DEASUPRA barei de comenzi, deci volumul și clipul
+   următor nu mai primesc clicul — cade pe el și urcă la clip, adică pauză. */
+.munte-fara[hidden]{display:none}
+/* ── Fereastra PLINĂ ─────────────────────────────────────────────────
+   Camera MUNTELE e singura în care stai, nu în care ceri ceva — harta din spate
+   ar fi zgomot.
+
+   Se pune peste `.mare`, nu în locul lui: chatul de dedesubt atârnă de regulile
+   lui `.sheet.mare .sc` și `.sheet.mare.ingust .lista`. De-aia selectoarele
+   poartă și `.mare` — aceeași specificitate ca `.mare.ingust`, dar scrise mai
+   jos, deci câștigă. Varianta `.ingust` e scrisă explicit, cu o clasă în plus,
+   ca să nu atârne de ordine.
+
+   Fondul e aproape opac (.97), nu blur: pe tot ecranul, `backdrop-filter` costă
+   la fiecare cadru, iar în spate oricum nu mai trebuie să se vadă nimic. */
+.sheet.mare.plin{left:0;top:0;width:100vw;height:100vh;max-height:100vh;
+  border:none;background:rgba(5,8,12,.97);backdrop-filter:none;
+  padding:22px 34px 26px;transform:translateX(-30px)}
+.sheet.mare.plin.ingust{width:100vw}
+.sheet.mare.plin.open{transform:translateX(0)}
+/* Conținutul nu se lățește cât ecranul: pe un monitor lat, bulele de conversație
+   ar traversa un metru de sticlă. Rama rămâne centrată. */
+.sheet.mare.plin .sc{max-width:1180px;width:100%;margin-left:auto;margin-right:auto}
+.sheet.mare.plin h2,.sheet.mare.plin .st{max-width:1180px;margin-left:auto;margin-right:auto;width:100%}
+.sheet.mare.plin .munte-clip{max-height:46vh}
+/* ── Bara de comenzi a clipului ──────────────────────────────────────
+   Volumul și trecerea la clipul următor: camera e un player.
+
+   Clipul întreg e deja suprafața de pauză, deci comenzile trebuie să fie o
+   suprafață SEPARATĂ, în colț — altfel fiecare atingere a volumului ar pune și
+   pauză. Apare la hover, ca semnul de pauză. Amândouă stau în ACEEAȘI ramă:
+   apărarea împotriva pauzei accidentale e scrisă o dată (vezi `legClipul`).
+
+   Volumul NU stă în pagină: pleacă în `munte.json`, prin `/api/munte/volum`.
+   Un volum ținut în browser ar dispărea la golirea cache-ului kiosk-ului, care
+   se face la fiecare pornire. Fără stare ascunsă în interfețe. */
+.munte-cmd{position:absolute;right:11px;bottom:9px;display:flex;align-items:center;gap:10px;
+  padding:5px 10px;background:rgba(5,8,12,.7);opacity:0;transition:opacity .35s ease}
+.munte-clip:hover .munte-cmd,.munte-cmd:focus-within{opacity:1}
+.munte-cmd span{font-family:var(--lbl);font-size:9px;letter-spacing:.16em;color:var(--ice-dim)}
+.munte-cmd input{-webkit-appearance:none;appearance:none;width:104px;height:3px;
+  background:rgba(159,212,245,.28);outline:none;cursor:pointer}
+.munte-cmd input::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;
+  width:11px;height:11px;border-radius:50%;background:var(--lamp);cursor:pointer}
+/* Semnul de „clipul următor": triunghi plus bară, desenate din `border`, ca
+   semnul de pauză de mai sus. Un caracter (⏭) ar atârna de fontul de sistem,
+   iar puntea nu cere nimic din afară ca să se deseneze. */
+.munte-next{position:relative;width:15px;height:12px;cursor:pointer;opacity:.7;
+  transition:opacity .2s ease}
+.munte-next:hover{opacity:1}
+.munte-next::before{content:'';position:absolute;left:0;top:0;width:0;height:0;
+  border-style:solid;border-width:6px 0 6px 10px;
+  border-color:transparent transparent transparent var(--ice-dim)}
+.munte-next:hover::before{border-left-color:var(--lamp)}
+.munte-next::after{content:'';position:absolute;right:0;top:0;width:2px;height:12px;
+  background:var(--ice-dim)}
+.munte-next:hover::after{background:var(--lamp)}
+/* Urma unui apel de unealtă. Nu e o replică, deci nu e bulă: e o notă între
+   ele, care spune de unde vin cifrele din răspunsul de dedesubt. */
+.unealta{align-self:center;font-size:10.5px;letter-spacing:.06em;color:var(--gold);opacity:.75;padding:2px 0}
+.scrie{align-self:flex-start;font-size:12px;color:var(--ice-dim);letter-spacing:.06em;animation:puls 1.4s ease-in-out infinite}
+@keyframes puls{0%,100%{opacity:.42}50%{opacity:1}}
+@media (prefers-reduced-motion:reduce){.scrie{animation:none;opacity:.8}}
+/* Bara NU măsoară progresul: agentul nu raportează pașii, iar o bară care
+   pretinde 40% când nimeni nu știe cât e ar minți mai rău decât tăcerea.
+   Spune un singur lucru — „lucrează, nu a înghețat" — care e tot ce lipsea. */
+.bara{height:3px;border-radius:2px;background:rgba(94,126,150,.22);overflow:hidden;margin:12px 0}
+.bara i{display:block;height:100%;width:32%;background:var(--gold);animation:curge 1.7s ease-in-out infinite}
+@keyframes curge{0%{transform:translateX(-110%)}100%{transform:translateX(350%)}}
+@media (prefers-reduced-motion:reduce){.bara i{animation:none;width:100%;opacity:.45}}
+/* Butonul stă pe fundul câmpului, nu întins pe toată înălțimea lui: la patru
+   rânduri, un TRIMITE de 120px ar fi o placă de chihlimbariu mai grea decât
+   conversația. Înălțimea lui e cea din restul punții. */
+.compune{display:flex;gap:8px;align-items:flex-end;padding-top:12px;border-top:1px solid rgba(94,126,150,.26)}
+.compune .btn{flex:0 0 auto;height:40px}
+/* Ce scrii trebuie să arate ca ce citești: aceleași cifre ca la .bula, puse
+   explicit. `font:inherit` mai întâi — șterge fontul implicit de formular al
+   browserului, care nu se moștenește de la body ca restul paginii.
+   Înălțimea e derivată, nu ghicită: 4 rânduri × 1.8 = 7.2em, plus 20px padding
+   și 2px chenar (box-sizing e border-box peste tot). Schimbi line-height-ul,
+   se mută și fundul câmpului odată cu el. */
+textarea{flex:1;font:inherit;font-size:13.5px;line-height:1.8;background:rgba(4,7,10,.85);border:1px solid rgba(94,126,150,.35);color:var(--ice);padding:10px 12px;resize:none;height:calc(7.2em + 22px)}
+textarea::placeholder{color:#4A6072}
+textarea:focus{outline:none;border-color:var(--lamp)}
+textarea:disabled{opacity:.45}
+
+/* ── Manualul ────────────────────────────────────────────────────────
+   Refolosește tot ce are chatul — `.chat`, `.msgs`, `.bula` — fiindcă manualul
+   se citește ca o conversație, nu ca o fișă. Două diferențe, ambele fiindcă
+   aici nu vorbește nimeni: bula se întinde pe toată lățimea și nu există câmp
+   de scris. `.cine` spune ce fel de lucru e dedesubt („CE FACE"), nu cine l-a
+   spus. */
+.msgs.man .bula{max-width:100%}
+.msgs.man .bula.voce{border-left-color:rgba(192,86,58,.55)}
+.msgs.man .bula .cine{color:rgba(192,86,58,.9)}
+.msgs.man .bula b{color:var(--lamp);font-weight:600}
+.msgs.man .bula code{font-family:var(--mono);font-size:12px;color:#8FADC2}
+/* Bulele intră una după alta, ca un răspuns care se scrie. Cu mișcarea redusă
+   nu intră deloc — apar toate odată, ceea ce e tot un răspuns, doar tăcut. */
+@keyframes apare{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:none}}
+.bula.apare{animation:apare .34s cubic-bezier(.22,.9,.24,1)}
+@media (prefers-reduced-motion:reduce){.bula.apare{animation:none}}
+
+.a11y{position:fixed;left:-9999px;top:0}
+.a11y:focus-within{left:12px;top:64px;z-index:50;background:#0A1017;border:1px solid var(--lamp);padding:10px}
+.a11y button{display:block;background:none;border:0;color:var(--ice);font-family:var(--mono);font-size:12px;padding:4px 6px;cursor:pointer}
+.a11y button:focus-visible{outline:1px solid var(--lamp)}
+</style>
+</head>
+<body>
+<canvas id="scene"></canvas>
+<div class="hud-top">
+  <!-- Numele asistentului, nu al încăperii. Lampa cade pe cele trei litere care
+       poartă înțelesul: JArvis · Socrate · Maharshi. Încăperea AGORA rămâne pe
+       hartă, în stânga-jos. -->
+  <div><div class="mark"><span>JA</span>.<span>S</span>.<span>M</span>ine</div><div class="sub" id="stardate"></div></div>
+  <div class="hud-r">Sisteme active <b id="cnt">—</b><br>Punte
+    <!-- Închiderea are nevoie de un loc VĂZUT: Escape minimizează, deci altfel
+         n-ar exista niciun drum afară pe care să-l știi fără să ți-l amintești.
+         Un × în colț, stins, care se aprinde sub mouse: e singurul buton de pe
+         hartă, și există fiindcă e singurul gest care n-are altă ușă. -->
+    <br><button id="inchide" class="x" title="Închide JA.S.Mine">×</button>
+  </div>
+</div>
+<div class="hud-bot">Server JA.S.Mine · localhost:8000 — motorul: Open WebUI, în sala mașinilor. Panourile nu au voce: fapte, nu judecăți.</div>
+<nav class="a11y" aria-label="Sisteme">
+  <button data-k="cmd">Command</button><button data-k="eng">Engineering</button>
+  <button data-k="log">Ship's log</button><button data-k="comms">Comms</button>
+  <button data-k="sensors">Sensors</button><button data-k="recon">Recon</button>
+  <button data-k="agora">Agora — Socrate</button><button data-k="munte">Muntele — Ramana</button>
+  <button data-k="amfi">Amfiteatrul</button>
+</nav>
+<!-- Minipanourile de perete se apasă cu mouse-ul; asta e ușa lor de tastatură.
+     Manualul întregii aplicații stă primul, ca pe perete. -->
+<nav class="a11y" aria-label="Manuale">
+  <button data-m="manual">Manual — JA.S.Mine</button><button data-m="cmd">Manual — Command</button>
+  <button data-m="comms">Manual — Comms</button><button data-m="sensors">Manual — Sensors</button>
+  <button data-m="log">Manual — Ship's log</button><button data-m="eng">Manual — Engineering</button>
+  <button data-m="recon">Manual — Recon</button><button data-m="agora">Manual — Agora</button>
+  <button data-m="amfi">Manual — Amfiteatrul</button><button data-m="munte">Manual — Muntele</button>
+</nav>
+<div class="sheet" id="sheet" role="dialog" aria-modal="true">
+  <button class="close" id="closeBtn">Închide</button>
+  <h2 id="sh-n"></h2><div class="st" id="sh-s"></div><div class="sc" id="sh-c"></div>
+</div>
+<script>
+"use strict";
+const cv=document.getElementById('scene'),cx=cv.getContext('2d');
+let W=0,H=0,DPR=Math.min(devicePixelRatio||1,2);
+const RM=matchMedia('(prefers-reduced-motion:reduce)').matches;
+function resize(){W=innerWidth;H=innerHeight;cv.width=W*DPR;cv.height=H*DPR;cx.setTransform(DPR,0,0,DPR,0,0);}
+addEventListener('resize',resize);resize();
+
+/* Razele nodurilor sunt în pixeli, pozițiile în fracțiuni din înălțime. Pe un
+   ecran scund nodurile ar rămâne la fel de mari și etichetele s-ar încăleca.
+   Nodurile se micșorează odată cu fereastra; peste 1000px de înălțime nu se
+   schimbă nimic. */
+const scaraNod=()=>Math.min(1,H/1000);
+
+const luni=['ian','feb','mar','apr','mai','iun','iul','aug','sep','oct','nov','dec'];
+const d0=new Date();
+document.getElementById('stardate').textContent='LOG '+String(d0.getDate()).padStart(2,'0')+' '+luni[d0.getMonth()]+' '+d0.getFullYear()+' · '+String(d0.getHours()).padStart(2,'0')+':'+String(d0.getMinutes()).padStart(2,'0');
+const stamp=d=>String(d.getDate()).padStart(2,'0')+' '+luni[d.getMonth()]+' '+String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');
+/* Tokenii, scurt, pentru rândurile din lista de conversații: „6.920 tok" nu
+   încape în coloană, „6,9k" încape și la 127k. Cifra exactă rămâne în bara de
+   sus a conversației deschise; în listă contează ordinul de mărime. Virgulă
+   zecimală, nu punct: româna. */
+const scurtTok=n=>{
+  if(n<1000)return String(n);
+  const k=n/1000;
+  // Pragul e pe valoarea rotunjită, nu pe cea brută: altfel 99.999 ar da
+  // „100,0k", care are o zecimală degeaba.
+  return (k<99.95?k.toFixed(1).replace('.',','):Math.round(k))+'k';
+};
+const esc=s=>s.replace(/[<>&"]/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c]));
+// Link venit din afară (RSS, mail): ancoră numai pentru http(s), altfel text.
+// Un `javascript:` ar rula în originea punții, cu acces la toate API-urile.
+const linkSigur=(url,text,stil)=>/^https?:\/\//i.test(url||'')
+  ?'<a href="'+esc(url)+'" target="_blank" rel="noopener"'+(stil?' style="'+stil+'"':'')+'>'+text+'</a>'
+  :text;
+
+const jurnal=[];
+
+/* Sub lățimea asta lista nu mai încape lângă mesaje fără să strângă bula sub
+   ce se citește comod, iar fereastra largă ar ajunge peste nodul selectat.
+   Un singur prag, citit și de CSS (prin clasa .ingust) și de canvas — două
+   valori scrise separat s-ar despărți la prima ajustare. */
+const PRAG_LISTA=1250;
+const larg=()=>innerWidth>=PRAG_LISTA;
+
+const NODES={
+  // Harta e așezată pe registre, nu pe simetrie. Sus și la mijloc, lumea de
+  // navă; jos, lumea grecească. SHIP'S LOG stă între ele fiindcă asta și e:
+  // consemnează fapte (navă) și hrănește vocile (grecesc).
+  //
+  // Coloana din mijloc, de sus în jos: COMMAND — SHIP'S LOG — rândul grecesc.
+  //
+  // COMMAND e RECE la construcție: aprins abia când JA.S.Mine poate și răspunde,
+  // și asculta. După ce serverul răspunde mai trec ~9–12 s până poate răspunde
+  // Sky, iar dictarea se armează și ea în ~10–13 s; portocaliul e citit ca „pot
+  // să dictez". Cine aprinde nodul: `refaCmd()`.
+  cmd:    {x:.50,y:.31,r:115,on:0,hue:'ice', name:'COMMAND',    tag:'motorul pornește'},
+  // COMMS n-are proces propriu care să moară: atârnă de internet, iar lipsa lui
+  // se vede în panou, nu pe hartă.
+  //
+  // `hue` ESTE culoarea aprinsului, nu un detaliu: `on:1` cu `hue:'ice'` desenează
+  // nodul în albastrul rece al încăperilor neconstruite, deci arată stins deși
+  // e viu. Camerele care fac ceva sunt pe `lamp`. Două comutatoare, nu unul.
+  comms:  {x:.20,y:.19,r:62, on:1,hue:'lamp', name:'COMMS',      tag:'mail · doar citire'},
+  // Aprins din același motiv ca COMMS: n-are proces propriu care să moară, iar
+  // o sursă picată se vede în panou, cu numele ei — nu pe hartă.
+  sensors:{x:.80,y:.19,r:62, on:1,hue:'lamp', name:'SENSORS',    tag:'știri · doar citire'},
+  eng:    {x:.15,y:.52,r:70, on:1,hue:'lamp', name:'ENGINEERING',tag:'proiecte'},
+  recon:  {x:.85,y:.52,r:65, on:0,hue:'ice',  name:'RECON',      tag:'agent · stins'},
+  log:    {x:.50,y:.61,r:74, on:1,hue:'lamp', name:"SHIP'S LOG", tag:'fapte, fără voce'},
+  // Rândul grecesc: AGORA — AMFITEATRUL — MUNTELE. Distanțele nu sunt egale
+  // dinadins. MUNTELE stă mai departe fiindcă e doar al autorului; golul dintre
+  // el și AMFITEATRU spune asta fără să scrie nimic.
+  //
+  // AGORA și MUNTELE sunt pe `lamp`: camere ridicate și folosite, iar pe hartă
+  // portocaliul înseamnă „face ceva". `door` (roșul irisului) rămâne la UNA
+  // singură, AMFITEATRUL, care nu există încă: „nu intra încă".
+  //
+  // Rece la construcție, ca COMMAND: și Socrate vorbește prin Open WebUI, deci
+  // în fereastra de pornire camera e nefuncțională. Recele spune că MOTORUL ei
+  // încă pornește, nu că încăperea lipsește.
+  agora:  {x:.19,y:.82,r:55, on:0,hue:'ice', name:'AGORA',      tag:'motorul pornește'},
+  amfi:   {x:.50,y:.82,r:48, on:0,hue:'door', name:'AMFITEATRUL',tag:'nu există încă'},
+  munte:  {x:.82,y:.82,r:53, on:0,hue:'ice',  name:'MUNTELE',    tag:'motorul pornește'}
+};
+/* Ordinea capetelor NU e indiferentă: punctul de control al curbei se ia
+   perpendicular pe vectorul primul→al doilea, deci scrisă invers, aceeași
+   legătură se bombează în partea cealaltă. Perechile oglindite trebuie scrise
+   în oglindă: stânga către centru, centrul către dreapta. */
+/* Al treilea câmp e conducta: 1 o desenează vie, cu unda care curge prin ea.
+   La RECON îl mută `arataAgentul`, fiindcă acolo e un proces care poate muri.
+   La COMMS și SENSORS e scris aici, ca și `on` de pe nod: sunt aprinse static,
+   iar ce se strică la ele se vede în panou, cu numele sursei.
+   NODUL ȘI CONDUCTA SUNT DOUĂ COMUTATOARE, NU UNUL: cine aprinde nodul trebuie
+   să aprindă și conducta, altfel nodul viu stă lângă o conductă stinsă. */
+const LINKS=[
+  ['comms','cmd',1,0],['cmd','sensors',1,1],['eng','cmd',1,2],['cmd','recon',0,3],
+  ['log','cmd',1,4],['log','agora',1,5],['munte','log',1,6],['log','amfi',0,7]
+];
+/* ROȘUL e culoarea stării „ascult" de la irisul dictării. Îl citesc trei locuri:
+   minipanourile de perete, camera neconstruită (`door`) și nodul deschis. */
+const IRIS='192,86,58';
+/* `dead` are aceeași luminanță ca `lamp` (0,4513 față de 0,4511), măsurată:
+   mortul se stinge din CULOARE, nu din lumină — stins și din alfa, nodul
+   aproape lipsea. NU e gri neutru (ăla ar fi `179,179,179`): păstrează tonul
+   albastru, iar saturația de 12% se citește ca gri. */
+const COL={lamp:{core:'240,163,66'},ice:{core:'120,165,200'},door:{core:IRIS},dead:{core:'172,180,190'}};
+
+for(const k in NODES){
+  const n=NODES[k];
+  n.px=0;n.py=0;n.cr=n.r;n.hov=0;n.burst=0;n.strang=0;
+  n.parts=[];
+  const cnt=Math.round(n.r*2.3);
+  for(let i=0;i<cnt;i++){
+    n.parts.push({th:Math.random()*Math.PI*2,ph:Math.random()*Math.PI*2,rr:.5+Math.random()*.62,sp:(.15+Math.random()*.5)*(Math.random()<.5?-1:1),sz:.7+Math.random()*1.8,tw:Math.random()*Math.PI*2});
+  }
+}
+
+const DUST=[];for(let i=0;i<130;i++)DUST.push({x:Math.random(),y:Math.random(),z:.3+Math.random()*.7,s:.4+Math.random()*1.1});
+
+/* window stars — two arched viewports, geometry of the original top arcs */
+const WIN=[
+  {rx1:.36,ry1:.255,rx2:.47,ry2:.325,tint:'250,185,100',speed:.075,stars:[]},
+  // Banda a doua e pe roșul irisului: geamul, dârele și cele două rame se
+  // colorează din `tint`.
+  {rx1:.22,ry1:.135,rx2:.34,ry2:.23,tint:IRIS,speed:.05,stars:[]}
+];
+for(const w of WIN){for(let i=0;i<52;i++)w.stars.push({u:Math.random(),f:.10+Math.random()*.80,b:.4+Math.random()*.6,len:.010+Math.random()*.018});}
+
+/* ── Minipanourile de pe pereți ──────────────────────────────────────
+   Zece ecrane, cinci pe fiecare perete: UȘILE MANUALULUI — nouă pentru cele
+   nouă camere, iar primul, stânga sus, pentru JA.S.Mine întreagă.
+
+   Da, sunt butoane. Regula „fără butoane" e despre controale adăugate ÎN
+   panouri; harta e făcută din suprafețe apăsabile. Un minipanou e aceeași
+   specie cu un nod: o ușă desenată, nu o comandă.
+
+   Împărțirea pe pereți urmează registrele hărții: la stânga lumea de navă
+   (plus manualul, care nu e din niciunul), la dreapta ce a mai rămas din navă
+   și tot rândul grecesc.
+
+   ROȘUL e `IRIS`, definit lângă `COL`. Mortul rămâne gri-albastru (`COL.dead`)
+   — el nu se apasă. */
+const MINI=[];
+[['manual','MANUAL'],['cmd','COMMAND'],['comms','COMMS'],['sensors','SENSORS'],['log',"SHIP'S LOG"]]
+  .forEach(([k,et],r)=>MINI.push({s:-1,r,k,et}));
+[['eng','ENGINEERING'],['recon','RECON'],['agora','AGORA'],['amfi','AMFITEATRUL'],['munte','MUNTELE']]
+  .forEach(([k,et],r)=>MINI.push({s:1,r,k,et}));
+for(const m of MINI){m.ph=Math.random()*7;m.blink=Math.random()*7;m.hov=0;}
+
+/* Lățimea se DERIVĂ din spațiul liber real: cât rămâne până la nodul lateral
+   cel mai apropiat, minus marginea și minus cei ~15px cu care parallax-ul
+   plimbă nodurile (`homeXY`). Scrisă fix, ar ieși din ecran pe o fereastră mică
+   și ar intra peste noduri pe una joasă și lată. Plafonată sus, ca să nu se
+   lățească inutil pe ecran mare. Un singur număr pentru ambii pereți: harta e
+   simetrică, iar două lățimi diferite s-ar citi ca o greșeală. */
+const MINI_MARJA=14, MINI_PARALLAX=17;
+/* Peretele curbat, scris o singură dată. Sunt trei elipse concentrice în
+   `drawEnv`, dar numai cea dinăuntru intră pe ecran — celelalte două stau, la
+   orice fereastră, în stânga lui x=0. Ea e „linia curbată" pe care minipanourile
+   NU au voie s-o depășească. */
+const PERETE={dx:.60,rx:.17,ry:.64};
+/* Zero, dinadins: panoul nu se OPREȘTE lângă perete, se TERMINĂ în el. Peretele
+   e latura lui dinspre hartă — de-aia forma n-are a patra muchie desenată. */
+const MINI_PAD_PERETE=0;
+/* Cât loc lasă peretele la înălțimea `y`, măsurat din marginea ecranului.
+   Aceeași cifră pe amândoi pereții: elipsele sunt oglindite, iar două lățimi
+   diferite s-ar citi ca o greșeală. */
+function latPerete(y){
+  const f=Math.sqrt(Math.max(0,1-Math.pow((y-H*.5)/(PERETE.ry*H),2)));
+  return W*(PERETE.rx*f-(PERETE.dx-.5))-MINI_MARJA-MINI_PAD_PERETE;
+}
+/* Banda pe verticală nu mai e doar ce lasă HUD-urile: e intersecția dintre ele
+   și porțiunea de perete care mai lasă loc de un panou citibil. Pe toată
+   înălțimea ecranului, arcul se închide spre colțuri — la 1920x1080 rândul de
+   sus avea 36px de perete și 120px de panou. Pragul de citit nu e o cifră
+   inventată: e minimul dintre 56px și 80% din ce oferă peretele la mijloc,
+   ca pe fereastră mică să se strângă în loc să iasă afară. */
+function bandaMini(){
+  let sus=BANDA.sus, jos=BANDA.jos||(H-52);
+  const latMax=latPerete(H*.5);
+  const f=(Math.min(56,latMax*.8)+MINI_MARJA+MINI_PAD_PERETE)/W/PERETE.rx+(PERETE.dx-.5)/PERETE.rx;
+  if(f<1){
+    const dy=PERETE.ry*H*Math.sqrt(1-f*f);
+    sus=Math.max(sus,H*.5-dy);jos=Math.min(jos,H*.5+dy);
+  }
+  return {sus,jos};
+}
+function latMini(){
+  const s=scaraNod();
+  let lib=W;
+  for(const k in NODES){
+    const n=NODES[k];
+    const d=n.x<.5?n.x*W-n.r*s:W-(n.x*W+n.r*s);
+    if(d<lib)lib=d;
+  }
+  return Math.max(52,Math.min(120,lib-MINI_MARJA-MINI_PARALLAX));
+}
+/* Un singur loc care spune unde stă un minipanou — desenul, mouse-ul și clicul
+   citesc de aici. Scrisă de două ori, geometria s-ar despărți la prima
+   ajustare, iar zona apăsabilă ar rămâne lângă dreptunghi, nu pe el. */
+/* Banda pe verticală NU se ghicește: se măsoară cele două HUD-uri, care sunt
+   HTML peste canvas. Cu numere fixe, minipanourile ar cădea peste stardate și
+   peste `×`, singurul buton de pe hartă.
+   Se recalculează la redimensionare, nu la fiecare cadru: HUD-ul de sus își
+   schimbă înălțimea doar când se schimbă fereastra. */
+let BANDA={sus:72,jos:0};
+function masoaraBanda(){
+  const sus=document.querySelector('.hud-top'), jos=document.querySelector('.hud-bot');
+  BANDA={
+    sus:(sus?sus.getBoundingClientRect().bottom:64)+14,
+    jos:H-(jos?jos.getBoundingClientRect().height:40)-14
+  };
+}
+addEventListener('resize',masoaraBanda);
+masoaraBanda();
+// Fontul condensat ajunge mai târziu și schimbă înălțimea HUD-ului. Fără
+// remăsurare, banda ar rămâne calculată pe fontul de rezervă.
+if(document.fonts&&document.fonts.ready)document.fonts.ready.then(masoaraBanda);
+function geomMini(m){
+  const wMax=latMini();
+  const {sus,jos}=bandaMini();
+  // Înălțimea se ia din lățimea CEA MAI MARE, nu din a fiecăruia: rândurile
+  // rămân egale pe verticală și aliniate, se schimbă doar lățimea.
+  let h=Math.max(36,wMax*.52);
+  // Fereastră scundă: mai bine cinci minipanouri turtite decât cinci care ies
+  // din ecran. Sub 26px nu mai încape nici numele, deci acolo se oprește.
+  if(sus+5*h+4*8>jos)h=Math.max(26,(jos-sus-32)/5);
+  const pas=Math.max(h+4,(jos-sus-h)/4);
+  const y=sus+m.r*pas;
+  /* Aici devin INEGALE, dinadins — și nu doar între ele: un panou nu mai are
+     nici măcar lățime CONSTANTĂ. `marg` spune, la orice înălțime, cât e de la
+     marginea ecranului până la perete; nodurile pun un plafon peste, ca panoul
+     să nu se lățească peste hartă acolo unde arcul se bombează. */
+  const marg=yy=>Math.max(8,Math.min(wMax,latPerete(yy)));
+  const a=marg(y), b=marg(y+h);
+  /* Două lățimi, pentru două treburi. `wCont` e cât e sigur pe TOATĂ înălțimea
+     — acolo încape scrisul, ca să nu iasă un „L" din formă. `wBox` e cutia care
+     cuprinde forma, pentru desen. */
+  const wCont=Math.min(a,b), wBox=Math.max(a,b);
+  return {y,h,s:m.s,marg,wCont,wBox,
+    x :m.s<0?MINI_MARJA:W-MINI_MARJA-wBox,
+    xc:m.s<0?MINI_MARJA:W-MINI_MARJA-wCont};
+}
+/* Muchia dinspre hartă, la înălțimea `yy` — chiar peretele. */
+function xPerete(g,yy){return g.s<0?MINI_MARJA+g.marg(yy):W-MINI_MARJA-g.marg(yy);}
+
+/* `selected` e NODUL selectat — el se mută în mijlocul hărții cât e panoul lui
+   deschis. `manualDeschis` e altceva: un manual folosește aceeași fereastră, dar
+   n-are voie să tragă niciun nod din loc. De-aia sunt două variabile și o
+   întrebare comună, `deschis()`, pentru tot ce ține de „e ceva pe ecran". */
+let selected=null,manualDeschis=null,mx=.5,my=.5,t=0,hover=null,hoverMini=null;
+const deschis=()=>selected||manualDeschis;
+function homeXY(n){const p=RM?0:1;return [n.x*W+(mx-.5)*30*p,n.y*H+(my-.5)*22*p];}
+addEventListener('mousemove',e=>{mx=e.clientX/W;my=e.clientY/H;},{passive:true});
+
+function drawWindows(){
+  const cxm=W/2, cy=-.16*H;
+  for(const w of WIN){
+    const rxm=(w.rx1+w.rx2)/2, rym=(w.ry1+w.ry2)/2;
+    /* glass: thick soft arc between the two frames */
+    cx.beginPath();
+    cx.ellipse(cxm,cy,rxm*W,rym*H,0,Math.PI*.08,Math.PI*.92);
+    cx.strokeStyle='rgba('+w.tint+',.08)';
+    cx.lineWidth=(w.ry2-w.ry1)*H;
+    cx.stroke();
+    /* streaking stars, computed directly on the band */
+    for(const st of w.stars){
+      if(!RM)st.u=(st.u+w.speed*(0.5+st.f)*0.016)%1;
+      const ang=Math.PI*.08+st.u*Math.PI*.84;
+      const rx=(w.rx1+(w.rx2-w.rx1)*st.f)*W;
+      const ry=(w.ry1+(w.ry2-w.ry1)*st.f)*H;
+      const x1=cxm+Math.cos(ang)*rx, y1=cy+Math.sin(ang)*ry;
+      const ang2=ang-st.len*8;
+      const x2=cxm+Math.cos(ang2)*rx, y2=cy+Math.sin(ang2)*ry;
+      if(y1<-6&&y2<-6)continue;
+      cx.beginPath();cx.moveTo(x1,y1);cx.lineTo(x2,y2);
+      cx.strokeStyle='rgba('+w.tint+','+(0.45+st.b*.55)+')';
+      cx.lineWidth=1.1+st.b*1.1;
+      cx.stroke();
+    }
+    /* window frames */
+    for(const [rx,ry] of [[w.rx1,w.ry1],[w.rx2,w.ry2]]){
+      cx.beginPath();
+      cx.ellipse(cxm,cy,rx*W,ry*H,0,Math.PI*.06,Math.PI*.94);
+      cx.strokeStyle='rgba('+w.tint+',.5)';
+      cx.lineWidth=1.6;cx.stroke();
+    }
+  }
+}
+
+function drawEnv(){
+  const cxm=W/2;
+  for(const d of DUST){
+    const dx=d.x*W+(mx-.5)*60*d.z*(RM?0:1), dy=d.y*H+(my-.5)*44*d.z*(RM?0:1);
+    cx.beginPath();cx.arc(dx,dy,d.s*d.z,0,7);
+    cx.fillStyle='rgba(159,212,245,'+(0.05+d.z*.06)+')';cx.fill();
+  }
+  drawWindows();
+  /* wall arcs */
+  for(const s of [-1,1]){
+    for(let i=0;i<3;i++){
+      cx.beginPath();
+      // Arcul dinăuntru (i=0) își ia cifrele din PERETE: el e și marginea după
+      // care se taie minipanourile. Scris de două ori, s-ar despărți la prima
+      // ajustare, iar panourile ar ieși din perete fără ca nimic să se schimbe
+      // vizibil în cod.
+      const ax=cxm+s*(PERETE.dx+i*.13)*W;
+      cx.ellipse(ax,H*.5,(PERETE.rx+i*.05)*W,(PERETE.ry+i*.08)*H,0,0,Math.PI*2);
+      cx.strokeStyle='rgba(240,163,66,'+(0.18-i*.05)+')';
+      cx.lineWidth=1.8-i*.4;cx.stroke();
+    }
+  }
+  /* Minipanourile — ușile manualului.
+     Nu mai sunt dreptunghiuri: au trei muchii drepte, iar a patra — cea dinspre
+     hartă — E PERETELE. Nu se desenează deloc, fiindcă arcul trece deja exact
+     pe acolo; un chenar peste el ar fi a doua linie pe același drum. De-aia
+     forma se umple pe o cale care urmează curba, nu pe `fillRect`. */
+  for(const m of MINI){
+    const g=geomMini(m), yy=g.y, bh=g.h;
+    const xin=g.s<0?MINI_MARJA:W-MINI_MARJA;   // muchia dinspre marginea ecranului
+    const a=m.hov;                       // 0 rece, 1 sub deget
+    const desc=manualDeschis===m.k?1:0;  // panoul lui e deschis chiar acum
+    const cald=Math.max(a,desc);
+    /* Rece și cald sunt aceeași culoare, deosebite prin intensitate — pe punte
+       nu mai e nimic argintiu. Semnalul de sub deget stătea oricum în chenar și
+       în umplere, nu în nuanța numelui: chenarul sare de la .38 la .95, numele
+       de la .80 la 1. */
+    const pasC=Math.max(2,bh/14);
+    cx.beginPath();cx.moveTo(xin,yy);cx.lineTo(xPerete(g,yy),yy);
+    for(let q=yy+pasC;q<yy+bh;q+=pasC)cx.lineTo(xPerete(g,q),q);
+    cx.lineTo(xPerete(g,yy+bh),yy+bh);cx.lineTo(xin,yy+bh);cx.closePath();
+    cx.fillStyle='rgba('+IRIS+','+(.05+cald*.07)+')';cx.fill();
+    // Numai cele trei muchii drepte, ca linie deschisă: sus, marginea, jos.
+    cx.beginPath();cx.moveTo(xPerete(g,yy),yy);cx.lineTo(xin,yy);
+    cx.lineTo(xin,yy+bh);cx.lineTo(xPerete(g,yy+bh),yy+bh);
+    cx.strokeStyle='rgba('+IRIS+','+(.38+cald*.57)+')';
+    cx.lineWidth=1;cx.stroke();
+    /* Scrisul stă în `wCont`, lățimea sigură pe toată înălțimea: măsurat pe
+       partea largă, un nume ar ieși din formă exact acolo unde curba se strânge.
+       Numele camerei, apoi cuvântul care spune ce se deschide — fără al doilea
+       rând, zece forme identice nu spun nimic, și tocmai el e motivul pentru
+       care nu trebuie ghicit că sunt apăsabile. */
+    const bw=g.wCont, x0=g.xc;
+    let fs=Math.max(8,Math.min(11,bw*.105));
+    cx.textAlign='left';
+    do{cx.font='600 '+fs.toFixed(1)+'px "Saira Condensed"';fs-=.5;}
+    while(fs>7&&cx.measureText(m.et).width>bw-14);
+    cx.fillStyle='rgba('+IRIS+','+(.80+cald*.20)+')';
+    cx.fillText(m.et,x0+7,yy+13);
+    if(bh>=40){
+      cx.font='8px "IBM Plex Mono"';
+      cx.fillStyle='rgba('+IRIS+','+(.52+cald*.33)+')';
+      cx.fillText('manual',x0+7,yy+24);
+    }
+    /* Barele nu măsoară nimic și n-au voie să pretindă că măsoară: n-au
+       etichetă, n-au cifră, n-au capăt. Spun un singur lucru — peretele e
+       viu — și ăsta e adevărat. */
+    const nb=bh>=52?2:1;
+    for(let l=0;l<nb;l++){
+      const wv=RM?.7:(.45+.5*Math.abs(Math.sin(t*.6+m.ph+l*1.3)));
+      cx.fillStyle='rgba('+IRIS+','+(0.3+((m.r+l)%2)*.1)+')';
+      cx.fillRect(x0+7,yy+bh-13-l*7,(bw-16)*wv,2.2);
+    }
+    /* Indicatorul care clipește — roșul irisului, cel de la „ascult". Stă în
+       colțul din DREAPTA SUS al formei, ca înainte: la panourile din stânga ăla
+       e peretele, la cele din dreapta marginea ecranului. Pus pe perete la
+       amândouă, la cele din dreapta ar fi căzut peste prima literă a numelui. */
+    const bl=RM?1:(Math.sin(t*2.2+m.blink)>.3?1:0);
+    cx.beginPath();cx.arc(g.s<0?xPerete(g,yy+8)-8:xin-8,yy+8,2.4,0,7);
+    cx.fillStyle='rgba('+IRIS+','+(bl?1:.22)+')';cx.fill();
+    /* Linia de scanare, singura mișcare pe toată înălțimea. Se întinde până în
+       perete, deci se lungește și se scurtează odată cu forma. */
+    const sv=RM?.5:((t*.25+m.ph)%1), sy=yy+2+(bh-6)*sv;
+    const wsc=Math.max(0,g.marg(sy)-4);
+    cx.fillStyle='rgba('+IRIS+',.24)';
+    cx.fillRect(g.s<0?xin+2:xin-2-wsc,sy,wsc,1.4);
+  }
+  /* floor rings */
+  for(let i=0;i<3;i++){
+    cx.beginPath();
+    cx.ellipse(cxm,H*1.07,(.26+i*.19)*W,(.13+i*.075)*H,0,Math.PI,Math.PI*2);
+    cx.strokeStyle='rgba(240,163,66,'+(0.22-i*.06)+')';
+    cx.lineWidth=1.8;cx.stroke();
+  }
+}
+
+function drawLinks(){
+  for(const [a,b,live,ph] of LINKS){
+    const A=NODES[a],B=NODES[b];
+    const x1=A.px,y1=A.py,x2=B.px,y2=B.py;
+    const mxq=(x1+x2)/2+(y1-y2)*.13, myq=(y1+y2)/2+(x2-x1)*.13;
+    const path=()=>{cx.beginPath();cx.moveTo(x1,y1);cx.quadraticCurveTo(mxq,myq,x2,y2);};
+    if(live){
+      /* tube walls */
+      path();cx.strokeStyle='rgba(240,163,66,.07)';cx.lineWidth=11;cx.stroke();
+      path();cx.strokeStyle='rgba(240,163,66,.16)';cx.lineWidth=4.5;cx.stroke();
+      path();cx.strokeStyle='rgba(240,163,66,.42)';cx.lineWidth=1.4;cx.stroke();
+      /* energy wave flowing through the tube */
+      if(!RM){
+        for(let wv=0;wv<2;wv++){
+          const u=((t*.16)+ph*.17+wv*.5)%1;
+          const g=cx.createLinearGradient(x1,y1,x2,y2);
+          const lo=Math.max(0,u-.16), hi=Math.min(1,u+.16);
+          g.addColorStop(0,'rgba(240,163,66,0)');
+          if(lo>0)g.addColorStop(lo,'rgba(240,163,66,0)');
+          g.addColorStop(u,'rgba(255,205,120,.95)');
+          if(hi<1)g.addColorStop(hi,'rgba(240,163,66,0)');
+          g.addColorStop(1,'rgba(240,163,66,0)');
+          path();cx.strokeStyle=g;cx.lineWidth=5.5;cx.stroke();
+          /* comet head */
+          const px=(1-u)*(1-u)*x1+2*(1-u)*u*mxq+u*u*x2;
+          const py=(1-u)*(1-u)*y1+2*(1-u)*u*myq+u*u*y2;
+          cx.beginPath();cx.arc(px,py,3,0,7);
+          cx.fillStyle='rgba(255,215,140,1)';cx.fill();
+          cx.beginPath();cx.arc(px,py,7,0,7);
+          cx.fillStyle='rgba(240,163,66,.25)';cx.fill();
+        }
+      }
+    }else{
+      path();cx.strokeStyle='rgba(94,126,150,.38)';cx.lineWidth=1.1;
+      cx.setLineDash([5,7]);cx.stroke();cx.setLineDash([]);
+    }
+  }
+}
+
+function drawNode(k){
+  const n=NODES[k];
+  /* Nodul DESCHIS trece pe roșul irisului, cât e panoul lui pe ecran — culoare,
+     nu doar mărime. Mărimea spune „ăsta e"; culoarea spune „ăsta lucrează
+     ACUM". Se pune peste `hue`, nu în locul lui: `on` și `hue` rămân starea
+     camerei, iar asta e o stare de moment, care se ia înapoi la închidere. */
+  const desch=selected===k;
+  /* Stinsul are DOUĂ înțelesuri: „există și e închis" (RECON stins, COMMAND,
+     AGORA și MUNTELE la pornire rece) și „nu există încă" (AMFITEATRUL). Primul e
+     gri, al doilea e `COL.door`, desenat chiar dacă `on` e 0 — altfel griul ar
+     spune „există" despre o cameră care nu există. */
+  const col=desch?{core:IRIS}:(n.on||n.hue==='door'?COL[n.hue]:COL.dead);
+  /* Mortul nu se stinge și din alfa: intensitatea o poartă CULOAREA, nu
+     transparența — altfel s-ar stinge de două ori și ar „lipsi aproape".
+     Singura excepție e haloul de mai jos: el e ce RADIAZĂ, iar portocaliul
+     înseamnă „face ceva". Rămâne mai jos la mort, ca să nu strige mai tare
+     decât viul. */
+  const R=n.cr*(1+n.hov*.06);
+  const gg=cx.createRadialGradient(n.px,n.py,R*.2,n.px,n.py,R*1.9);
+  gg.addColorStop(0,'rgba('+col.core+','+((n.on?.20:.10)+n.hov*.08)+')');
+  gg.addColorStop(1,'transparent');
+  cx.fillStyle=gg;cx.beginPath();cx.arc(n.px,n.py,R*1.9,0,7);cx.fill();
+  // Cât se numără tăcerea, elipsele se strâng spre centru. E singurul lucru
+  // care arată timpul care trece fără să scrie o cifră pe ecran.
+  const sg=1-(n.strang||0)*.28;
+  cx.beginPath();cx.ellipse(n.px,n.py,R*1.18*sg,R*.44*sg,t*.1*(RM?0:1),0,7);
+  cx.strokeStyle='rgba('+col.core+',.3)';cx.lineWidth=.9;cx.stroke();
+  cx.beginPath();cx.ellipse(n.px,n.py,R*.9*sg,R*1.12*sg,-t*.07*(RM?0:1)+.9,0,7);
+  cx.strokeStyle='rgba('+col.core+',.18)';cx.lineWidth=.7;cx.stroke();
+  const spin=RM?0:t;
+  for(const p of n.parts){
+    const th=p.th+spin*p.sp;
+    const sx=Math.cos(th)*Math.sin(p.ph), sy=Math.cos(p.ph)*.74, sz=Math.sin(th)*Math.sin(p.ph);
+    const depth=(sz+1)/2, rr=R*p.rr*(1+n.burst*.55);
+    const x=n.px+sx*rr, y=n.py+sy*rr;
+    const tw=RM?1:(.6+.4*Math.sin(t*2+p.tw));
+    cx.beginPath();cx.arc(x,y,p.sz*(.5+depth*.9),0,7);
+    cx.fillStyle='rgba('+col.core+','+((0.14+depth*.55)*tw)+')';cx.fill();
+  }
+  cx.beginPath();cx.arc(n.px,n.py,Math.max(3,R*.08),0,7);
+  cx.fillStyle='rgba('+col.core+',.95)';cx.fill();
+  const ly=n.py+R*1.28+16;
+  cx.font='600 13px "Saira Condensed"';cx.textAlign='center';
+  // Numele și eticheta merg cu orbul: altfel nodul deschis s-ar citi ca două
+  // obiecte suprapuse, un orb roșu sub un nume albastru.
+  cx.fillStyle=desch?'rgba('+IRIS+',1)':(n.on?'rgba('+IRIS+','+(0.78+n.hov*.22)+')':'rgba('+col.core+',.8)');
+  cx.fillText(n.name.split('').join(' '),n.px,ly);
+  cx.font='10.5px "IBM Plex Mono"';
+  cx.fillStyle=desch?'rgba('+IRIS+',.78)':(n.on?'rgba(240,163,66,.75)':'rgba('+col.core+',.75)');
+  cx.fillText(n.tag,n.px,ly+16);
+}
+
+function frame(){
+  t+=RM?0:.016;
+  // Partea VĂZUTĂ a urechii. Particulele respiră cu vocea, elipsele se strâng
+  // pe măsură ce tăcerea se apropie de prag — dacă pragul de volum e greșit
+  // reglat, se vede pe loc.
+  //
+  // Cifrele vin de pe firul audio (U.nivel, U.strang), nu se calculează aici:
+  // rAF se oprește cu fereastra ascunsă, dar tot e ceva de auzit. Desenul poate
+  // să moară; urechea nu.
+  // Doar în ENGAGE. În AȘTEPT harta ar pulsa toată ziua, la fiecare vorbă spusă
+  // în cameră — un semn care nu mai spune nimic fiindcă e mereu acolo.
+  if(U.mod==='engage'&&!RM){
+    NODES.cmd.burst=Math.min(1,U.nivel*7);
+    NODES.cmd.strang=U.strang;
+  }
+  // Minipanourile se încălzesc și se răcesc lin, ca nodurile. Cât e ceva
+  // deschis nu se aprinde niciunul: acolo mouse-ul lucrează pentru fereastră.
+  for(const m of MINI)m.hov+=((hoverMini===m&&!deschis()?1:0)-m.hov)*.15;
+  cx.clearRect(0,0,W,H);
+  drawEnv();
+  for(const k in NODES){
+    const n=NODES[k];
+    const [hx,hy]=homeXY(n);
+    const s=scaraNod();
+    let tx=hx,ty=hy,tr=n.r*s;
+    // Panoul mare se întinde până pe la jumătatea ecranului, deci nodul lui se
+    // dă mai la dreapta ca să nu ajungă sub fereastră. Sub prag, fereastra e
+    // îngustă din nou și nodul stă unde a stat dintotdeauna.
+    if(selected===k){tx=W*(P[k]&&P[k].mare&&larg()?.82:.66);ty=H*.46;tr=n.r*2.1*s;}
+    else if(selected){tx=hx+(hx-W/2)*.05;ty=hy+(hy-H/2)*.05;tr=n.r*.9*s;}
+    n.px+=(tx-(n.px||tx))*.08;n.py+=(ty-(n.py||ty))*.08;
+    if(!n._i){n.px=tx;n.py=ty;n._i=1;}
+    n.cr+=(tr-n.cr)*.08;
+    n.hov+=((hover===k&&!deschis()?1:0)-n.hov)*.15;
+    n.burst*=.9;
+  }
+  // Harta se estompează sub ORICE fereastră deschisă, inclusiv sub un manual:
+  // ce se citește e în față, restul e fundal.
+  cx.globalAlpha=deschis()?0.45:1;
+  drawLinks();
+  for(const k in NODES){
+    if(k===selected)continue;
+    cx.globalAlpha=deschis()?0.35:1;
+    drawNode(k);
+  }
+  cx.globalAlpha=1;
+  if(selected)drawNode(selected);
+  requestAnimationFrame(frame);
+}
+
+/* ── Rularea RECON supraviețuiește panoului ──────────────────────────
+   Panoul se reconstruiește la fiecare deschidere, deci orice stare ținută
+   în `wire()` moare la primul Escape. Iar Escape e exact ce apeși când o
+   rulare pare că nu face nimic: rămâi fără nicio urmă că agentul lucrează.
+
+   De-asta starea stă AICI, afară: cronometrul se regăsește la redeschidere,
+   iar rezultatul te așteaptă dacă rularea s-a terminat cât erai plecat. */
+const RECON_STARE={pornit:null,rezultat:null,tic:null,pandar:null};
+const RECON_SECUNDE=()=>Math.round((Date.now()-RECON_STARE.pornit)/1000);
+
+const P={
+  cmd:{n:'COMMAND',s:'Aici ceri fapte. Se duce după ele.',
+       ...faChat('sky')},
+  eng:{n:'ENGINEERING',s:'Stare, nu evaluare',html(){
+    return '<div id="eng-out"><div class="empty">Citesc lista…</div></div>'
+      +'<div class="hint">Depozit: date\\proiecte.json — se vede la reîncărcare.</div>';},
+    wire(){
+      const out=document.getElementById('eng-out');
+      fetch('/api/proiecte').then(r=>r.json()).then(d=>{
+        if(!d||!d.ok){
+          // Fișierul e scris de mână, deci motivul contează: „linia 7, coloana 3"
+          // e reparabil, „nu s-a putut" nu e.
+          out.innerHTML='<div class="need">Lista nu s-a putut citi.<br><em>'
+            +esc((d&&d.eroare)||'necunoscut')+'</em></div>';return;}
+        const l=d.proiecte||[];
+        // esc() de-acum: textul vine dintr-un fișier de pe disc, nu din pagină.
+        out.innerHTML=l.length
+          ?l.map(p=>'<div class="row"><span>'+esc(p.n||'')+' — '+esc(p.s||'')
+            +'</span><span class="v">'+esc(p.u||'')+'</span></div>').join('')
+          :'<div class="empty">Fișierul e gol.</div>';
+      }).catch(()=>{out.innerHTML='<div class="need">Serverul JA.S.Mine nu răspunde.</div>';});
+    }},
+  log:{n:"SHIP'S LOG",s:'Consemnează un fapt. Fără comentariu.',html(){return '<div class="fld"><input id="i-log" placeholder="Ce s-a întâmplat." autocomplete="off"><button class="btn" id="b-log">Consemnează</button></div><div id="l-list"></div><div class="hint" id="h-log">Depozit: date\\jurnal.jsonl. Ideea depășită se scoate cu × — nu dispare, se mută în jurnal-inchis.jsonl.</div>';},
+    wire(){
+      const i=document.getElementById('i-log'),L=document.getElementById('l-list'),h=document.getElementById('h-log');
+      const HINT=h.textContent;
+      /* Indicele din `jurnal`, nu un id: jurnalul n-are id-uri pe disc, iar
+         rândul se identifică la server prin `cand` + `text`. Aici e nevoie doar
+         să știm pe care l-a apăsat omul. */
+      const dr=()=>{L.innerHTML=jurnal.length?jurnal.map((e,ix)=>'<div class="row log-r" data-i="'+ix+'"><div class="log-cap"><span class="v w">'+stamp(new Date(e.cand))+'</span><button class="conv-x" title="Scoate ideea din jurnal">×</button></div><div class="log-t">'+esc(e.text)+'</div></div>').join(''):'<div class="empty">Jurnal gol.</div>';};
+      const err=()=>{h.textContent='Serverul nu răspunde. Intrarea NU s-a salvat.';};
+      /* Scoaterea unei idei depășite. FĂRĂ confirmare: rândul nu se aruncă, se
+         mută în `jurnal-inchis.jsonl`. O întrebare pusă pentru un gest care nu
+         pierde nimic e o treaptă în plus la fiecare curățenie.
+         Lista nu se recere de la server: răspunsul spune deja că rândul a plecat. */
+      const scoate=it=>{
+        fetch('/api/jurnal',{method:'DELETE',headers:{'Content-Type':'application/json'},
+                             body:JSON.stringify({cand:it.cand,text:it.text})})
+          .then(r=>r.json())
+          .then(d=>{
+            if(!d||!d.ok){h.textContent=(d&&d.eroare)||'Nu s-a putut scoate.';return;}
+            const k=jurnal.indexOf(it);if(k>=0)jurnal.splice(k,1);
+            h.textContent=HINT;dr();})
+          .catch(()=>{h.textContent='Serverul nu răspunde. NU s-a scos nimic.';});};
+      /* Un click, o delegare — rândurile se redesenează la fiecare schimbare. */
+      L.onclick=e=>{
+        if(!e.target.closest('.conv-x'))return;
+        const rand=e.target.closest('.log-r');if(!rand)return;
+        const it=jurnal[+rand.dataset.i];if(it)scoate(it);};
+      fetch('/api/jurnal').then(r=>r.json()).then(d=>{jurnal.length=0;jurnal.push(...d);dr();}).catch(err);
+      const ad=()=>{const v=i.value.trim();if(!v)return;
+        fetch('/api/jurnal',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text:v})})
+          .then(r=>{if(!r.ok)throw 0;return r.json();})
+          .then(e=>{jurnal.unshift(e);i.value='';dr();})
+          .catch(err);};
+      document.getElementById('b-log').onclick=ad;
+      i.addEventListener('keydown',e=>{if(e.key==='Enter')ad()});dr();i.focus();
+    }},
+  /* COMMS n-are butoane, spre deosebire de RECON, unde „Rulează" costă bani.
+     Aici raportul e gratuit și nu atinge Gmail-ul, deci se citește singur la
+     deschiderea panoului.
+     Deschiderea MUTĂ reperul, la fel ca ușa din chat: un singur mecanism. Nu e o
+     pierdere — raportul e chiar pe ecran în clipa aia, iar `date\comms.jsonl` îl
+     păstrează. De-asta scrie în hint pe unde se privește înapoi. */
+  comms:{n:'COMMS',s:'Mail · doar citire',html(){
+    return '<div id="comms-out"><div class="empty">Citesc inboxul…</div></div>'
+      +'<div class="hint">Ce a intrat necitit de la ultimul raport. Odată afișat, fereastra se închide — data viitoare vezi doar ce a apărut între timp. Nimic nu se marchează citit în Gmail. Ca să te uiți înapoi, cere-i lui Sky „ce mailuri am avut în ultimele trei zile”: aia nu mișcă reperul.</div>';},
+    wire(){
+      const out=document.getElementById('comms-out');
+      const err=m=>{out.innerHTML='<div class="need">'+m+'</div>';};
+      fetch('/api/comms/raport').then(r=>r.json()).then(d=>{
+        /* Titlul erorii vine de la SERVER, ca la RECON: `server` spune Gmail sau
+           JA.S.Mine, ca eșecul să se repare în locul potrivit. */
+        if(!d||!d.ok){err(esc((d&&d.eroare)||'Nu pot citi mailul.')
+          +((d&&d.detaliu)?'<br><em>'+esc(d.detaliu)+'</em>':''));return;}
+        const r=(d.date&&d.date.raport)||{},txt=(d.date&&d.date.text)||'';
+        let html='<div class="need" style="margin-bottom:12px">'+esc(txt).replace(/\n/g,'<br>')+'</div>';
+        const lst=r.mailuri||[];
+        /* Panoul arată expeditorul și subiectul, atât. Propoziția de rezumat o
+           scrie Sky, în chat — aici n-are cine s-o scrie, și un extras brut de
+           400 de caractere pe ecran ar fi zgomot, nu informație. */
+        html+=lst.length?lst.map(m=>{
+          const d2=new Date(m.data),ceas=isNaN(d2)?'':stamp(d2);
+          return '<div class="row"><span>'+esc(m.eticheta)+' — '+esc(m.subiect||'(fără subiect)')
+            +'</span><span class="v w">'+ceas+'</span></div>';}).join('')
+          :'<div class="empty">Nimic nou.</div>';
+        out.innerHTML=html;
+      }).catch(()=>err('Serverul JA.S.Mine nu răspunde.'));
+    }},
+  /* SENSORS, ca și COMMS, n-are butoane: citirea e gratuită și nu schimbă nimic
+     nicăieri, deci se face singură la deschidere.
+     Spre deosebire de COMMS, deschiderea NU consumă nimic. Acolo, reperul se
+     mută fiindcă panoul ARATĂ raportul. Aici „dat deja" înseamnă „spus de Sky",
+     iar panoul nu spune, doar arată — și arată tot, inclusiv ce a spus el, doar
+     că stins. Așa panoul e și supapa: locul unde te uiți înapoi la fereastra
+     întreagă fără să ceri nimic nimănui, și fără să plătești un token. */
+  sensors:{n:'SENSORS',s:'Știri · doar citire',html(){
+    return '<div id="sens-out"><div class="empty">Citesc fluxurile…</div></div>'
+      +'<div class="hint">Ce a apărut în ultimele 24 de ore la Digi24, Economedia și CNN, economicele deasupra. Stins = ți-a spus deja Sky. Titlul e link: se deschide în altă fereastră.</div>';},
+    wire(){
+      const out=document.getElementById('sens-out');
+      const err=m=>{out.innerHTML='<div class="need">'+m+'</div>';};
+      fetch('/api/sensors/raport').then(r=>r.json()).then(d=>{
+        /* Titlul erorii vine de la SERVER, ca la COMMS și RECON: `server` spune
+           pe cine repari — site-urile sau JA.S.Mine. */
+        if(!d||!d.ok){err(esc((d&&d.eroare)||'Nu pot citi știrile.')
+          +((d&&d.detaliu)?'<br><em>'+esc(d.detaliu)+'</em>':''));return;}
+        const r=(d.date&&d.date.raport)||{},lst=r.stiri||[];
+        if(!lst.length){err(esc((d.date&&d.date.text)||'Nicio știre.'));return;}
+        const rand=s=>{
+          const t=new Date(s.data),ceas=isNaN(t)?'':stamp(t);
+          return '<div class="stire'+(s.spusa?' spusa':'')+'">'
+            +linkSigur(s.link,esc(s.titlu))
+            +'<div class="m">'+esc(s.sursa)+' · '+ceas+(s.spusa?' · spusă':'')+'</div></div>';};
+        const ec=lst.filter(s=>s.categorie==='economie'),alte=lst.filter(s=>s.categorie!=='economie');
+        let html='';
+        if(ec.length)html+='<div class="grup sus">Economie</div>'+ec.map(rand).join('');
+        if(alte.length)html+='<div class="grup'+(ec.length?'':' sus')+'">Restul</div>'+alte.map(rand).join('');
+        html+='<div class="hint" style="margin-top:14px">'+esc((d.date&&d.date.text)||'')+'</div>';
+        out.innerHTML=html;
+      }).catch(()=>err('Serverul JA.S.Mine nu răspunde.'));
+    }},
+  recon:{n:'RECON',s:'Agent 051 · fapte, fără voce',html(){
+    return '<div class="fld">'
+      +'<button class="btn" id="b-recon-st" style="flex:1;padding:9px 0">Stare pipeline</button>'
+      +'<button class="btn" id="b-recon-br" style="flex:1;padding:9px 0">Briefing</button>'
+      +'</div>'
+      +'<div class="fld" style="margin-top:8px">'
+      +'<button class="btn" id="b-recon-run" style="flex:1;padding:9px 0;border-color:var(--gold);color:var(--gold)">Rulează + briefing</button>'
+      +'</div>'
+      +'<div id="recon-out"><div class="empty">Interoghez agentul…</div></div>'
+      +'<div class="hint">„Briefing" arată joburile, oricând, fără să miște nimic. „Rulează + briefing" caută mailuri noi și le procesează. Fiecare rulare pornește de unde ai rămas: <b>sus e ce a adus ultima rulare</b>, dedesubt toate joburile.</div>';},
+    wire(){
+      const out=document.getElementById('recon-out');
+      const bSt=document.getElementById('b-recon-st'),bBr=document.getElementById('b-recon-br'),bRun=document.getElementById('b-recon-run');
+      const busy=m=>{out.innerHTML='<div class="empty">'+m+'</div>';};
+      const err=m=>{out.innerHTML='<div class="need">'+m+'</div>';};
+      const row=(k,v,w)=>'<div class="row"><span>'+k+'</span><span class="v'+(w?' w':'')+'">'+v+'</span></div>';
+      /* Butoanele se caută în DOM la fiecare apel, nu se țin de referințele
+         de mai sus: o rulare pornită într-un panou se poate termina într-altul,
+         după ce Escape l-a închis pe primul. Cu referințe capturate, `lock(false)`
+         de la sfârșit ar debloca butoane care nu mai există, iar cele de pe ecran
+         ar rămâne stinse pentru totdeauna. */
+      const lock=v=>{['b-recon-st','b-recon-br','b-recon-run'].forEach(id=>{
+        const b=document.getElementById(id);if(!b)return;
+        b.disabled=v;b.style.opacity=v?'.45':'';b.style.pointerEvents=v?'none':'';});};
+      /* Titlul erorii vine de la SERVER, nu e scris aici: fiecare eșec își
+         numește serverul („agentul 051 nu raspunde", „serverul JA.S.Mine nu a
+         putut executa unealta"), iar `detaliu` poartă cauza desfăcută din grupul
+         de excepții. Scris fix aici, titlul ar acuza agentul și pentru un defect
+         al serverului JA.S.Mine. */
+      const esec=d=>{if(d&&d.ok)return false;
+        err(esc((d&&d.eroare)||'Agentul 051 nu răspunde.')
+          +((d&&d.detaliu)?'<br><em>'+esc(d.detaliu)+'</em>':''));return true;};
+      const jobul=o=>'<div class="row" style="display:block;padding:9px 0">'
+        +'<div><span>'+esc(o.titlu||'')+'</span> — <span class="v">'+esc(o.firma||'')+'</span>'
+        +(o.link?' · '+linkSigur(o.link,'link','color:var(--ice)'):'')+'</div>'
+        +(o.motiv?'<div class="hint" style="margin-top:4px">'+esc(o.motiv)+'</div>':'')
+        +'</div>';
+      /* LISTA ÎNTREAGĂ, sub delta, cu titlul ei, și nu dispare niciodată: cu
+         numai delta de la reper, o bază plină de candidate ar arăta „Nimic de
+         semnalat". Delta stă sus fiindcă după o rulare întrebarea e „ce a adus". */
+      const htmlJoburi=d=>{
+        const lst=(d.date&&d.date.oportunitati)||[],tot=(d.date&&d.date.total_candidate);
+        const cap='<div class="grup" style="margin-top:18px;padding-top:10px;border-top:1px solid rgba(255,255,255,.08)">Toate joburile</div>';
+        if(!lst.length)return cap+'<div class="empty">Baza agentului e goală — nimic evaluat încă.</div>';
+        return cap+'<div class="hint" style="margin-bottom:10px">'+lst.length+' din '+tot
+          +' candidate, în ordinea priorității.</div>'+lst.map(jobul).join('');};
+      /* „Nimic nou" trebuie să se vadă ca RĂSPUNS, nu ca tăcere: altfel o
+         unealtă care lucrează corect arată la fel ca una moartă. Ceasul e în ora
+         ta, nu în UTC-ul din textul agentului. */
+      const htmlDelta=d=>{
+        if(!d||!d.ok)return '';
+        const b=(d.date&&d.date.briefing)||{};
+        let h='<div class="grup sus">Ce a adus ultima rulare</div><div class="hint">'
+          +'Rularea din '+(b.de_la?stamp(new Date(b.de_la)):'—')+': '
+          +(b.mesaje_noi||0)+' mesaje, '+(b.anunturi_noi||0)+' anunțuri noi';
+        const lst=b.merita_atentie||[];
+        h+=lst.length?', dintre care '+lst.length+' de semnalat:</div>'+lst.map(jobul).join('')
+                     :'. Nimic nou de semnalat.</div>';
+        /* „Nimic de semnalat" spus înainte ca agentul să fi judecat tot e o
+           minciună prin omisiune — arată identic cu „am judecat tot și n-a ieșit
+           nimic". `in_asteptare` se uită la TOATĂ baza, nu doar la noutăți: o
+           coadă rămasă de săptămâna trecută face briefingul de azi la fel de
+           incomplet ca una de acum zece minute.
+
+           Rândul apare numai când `total` e nenul — un avertisment permanent e
+           mobilier. `total` vine de la agent și NU se recalculează aici ca sumă:
+           un anunț care așteaptă și descriere, și evaluare, se numără o dată. */
+        const a=b.in_asteptare||{};
+        if(a.total){
+          const p=[];
+          if(a.fara_descriere)p.push('fără descriere: '+a.fara_descriere);
+          if(a.nenormalizate)p.push('nenormalizate: '+a.nenormalizate);
+          if(a.neevaluate)p.push('neevaluate: '+a.neevaluate);
+          h+='<div class="need" style="margin-top:10px">Briefingul e incomplet: '
+            +(p.length?esc(p.join(', ')):a.total+' în așteptare')
+            +'. Rulează din nou.</div>';}
+        return h;};
+      const stare=()=>{busy('Interoghez agentul…');
+        fetch('/api/recon/stare').then(r=>r.json()).then(d=>{
+          // Panoul tocmai a întrebat agentul: „viu" se scrie pe loc. Un eșec
+          // se lasă sondei, care deosebește oprit, ocupat și eroare.
+          if(d.ok)arataAgentul({viu:true});else sondaAgent();
+          if(!d.ok){err(esc(d.eroare||'Agentul 051 nu răspunde.')
+            +(d.detaliu?'<br><em>'+esc(d.detaliu)+'</em>':''));return;}
+          const e=d.date.etape,c=d.date.cost||{};
+          /* CÂND a lucrat ultima oară, primul rând. Cifrele de dedesubt sunt
+             totaluri cumulate: arată identic fie că lanțul a rulat acum cinci
+             minute, fie acum trei zile. Fără ceas, răspunsul corect „nimic nou"
+             arată exact ca o unealtă moartă. */
+          const ub=d.date.ultim_briefing;
+          out.innerHTML=row('Ultimul briefing',ub?stamp(new Date(ub)):'niciodată',1)
+            +row('Mailuri',e.mailuri)+row('Anunțuri',e.anunturi)
+            +row('Normalizate',e.normalizate_ok,1)
+            +row('Trec filtrul',e.filtrate_trece,1)
+            +row('Respinse / incerte',e.filtrate_respins+' / '+e.filtrate_incert)
+            /* CURENTE și VECHI, despărțite. Adunate, ascundeau exact ce despărțirea
+               a făcut vizibil: verdictele rămase pe o versiune veche de criterii nu
+               sunt o pierdere, sunt o listă de reevaluat. Adunate, un salt de
+               versiune arăta ca o creștere. */
+            +row('Evaluate calitativ',e.evaluate_calitativ_curente,1)
+            +(e.evaluate_calitativ_vechi?row('— pe criterii vechi',e.evaluate_calitativ_vechi+' · de reevaluat'):'')
+            +(e.versiune_criterii!=null?row('Versiune criterii',e.versiune_criterii):'')
+            /* Cât din bază a fost chiar CITIT. Mult sub „Anunțuri" e răspunsul la
+               „de ce atâtea incerte": un incert însemna „n-am citit anunțul", nu
+               „anunț neclar". LinkedIn rămâne deliberat necitit. */
+            +(e.cu_descriere!=null?row('Cu descriere',e.cu_descriere+' din '+e.anunturi,1):'')
+            +(c.apeluri_total!=null?row('Apeluri model (total)',c.apeluri_total)+row('Tokeni (total)',c.tokeni_total):'');
+        }).catch(()=>err('Serverul JA.S.Mine nu răspunde.'));};
+      /* Un singur drum: joburile și delta se cer împreună, se desenează
+         împreună. Două butoane ar fi însemnat că omul trebuie să știe pe care
+         să apese ca să vadă ce a găsit agentul — exact ce n-are de ce să știe. */
+      const brief=()=>{lock(true);busy('Cer joburile…');
+        Promise.all([fetch('/api/recon/oportunitati?limita=12').then(r=>r.json()),
+                     fetch('/api/recon/briefing').then(r=>r.json())])
+          .then(([op,br])=>{if(esec(op))return;out.innerHTML=htmlDelta(br)+htmlJoburi(op);})
+          .catch(()=>err('Serverul JA.S.Mine nu răspunde.')).finally(()=>lock(false));};
+      /* Nu există buton „am citit", și n-are voie să reapară: ar sta în
+         rezultatul rulării, deci singurul drum înapoi la el ar fi încă o rulare.
+         O rulare nouă înseamnă implicit că ai citit. Reperul se mută pe
+         server, la începutul rulării. */
+      /* Ce se vede cât lucrează agentul: CE face și CE apare la sfârșit.
+         CÂT ține nu se scrie: lanțul ține sub un minut, iar cronometrul de mai
+         jos spune oricum cât a trecut — o durată promisă ar fi ori inutilă, ori
+         o scuză. */
+      const htmlProgres=()=>{
+        const s=RECON_SECUNDE();
+        return '<div class="need" style="margin-bottom:4px">Agentul lucrează. Nu s-a blocat.</div>'
+          +'<div class="bara"><i></i></div>'
+          +'<div class="hint">Citește mailurile noi din Gmail, le desface în anunțuri, '
+          +'trage paginile celor care n-au text, și le trece prin filtre.</div>'
+          +'<div class="hint" style="margin-top:8px">Când termină, <b>aici apare lista de '
+          +'joburi</b>, cu firmă și link. Poți închide panoul cu Escape și te întorci — '
+          +'rularea nu se oprește, iar rezultatul te așteaptă.</div>'
+          +'<div class="hint" style="margin-top:8px">de <span id="recon-sec">'
+          +Math.floor(s/60)+':'+String(s%60).padStart(2,'0')+'</span></div>';};
+      const ticaie=()=>{
+        clearInterval(RECON_STARE.tic);
+        RECON_STARE.tic=setInterval(()=>{
+          if(!RECON_STARE.pornit){clearInterval(RECON_STARE.tic);return;}
+          const el=document.getElementById('recon-sec');
+          if(!el)return;  // panoul e închis; rularea merge, ceasul o așteaptă
+          const s=RECON_SECUNDE();
+          el.textContent=Math.floor(s/60)+':'+String(s%60).padStart(2,'0');
+        },1000);};
+      /* Rularea pornită de altcineva — de pagina dinainte de reîncărcare, de al
+         doilea tab — nu ne lasă nicio promisiune de așteptat. Atunci întrebăm
+         serverul din cinci în cinci secunde până tace, și cerem rezultatul ca
+         la „Briefing". */
+      const asteaptaSfarsitul=()=>{
+        clearInterval(RECON_STARE.pandar);
+        RECON_STARE.pandar=setInterval(()=>{
+          fetch('/api/recon/ruleaza/stare').then(r=>r.json()).then(z=>{
+            if(z&&z.ruleaza)return;
+            clearInterval(RECON_STARE.pandar);clearInterval(RECON_STARE.tic);
+            RECON_STARE.pornit=null;arataAgentul({viu:true});lock(false);
+            brief();
+          }).catch(()=>{});},5000);};
+      const ruleaza=()=>{lock(true);
+        RECON_STARE.pornit=Date.now();RECON_STARE.rezultat=null;
+        // Harta e singurul semn care rămâne când panoul se închide.
+        arataAgentul({lucreaza:true});
+        out.innerHTML=htmlProgres();ticaie();
+        let preluat=false;
+        fetch('/api/recon/ruleaza',{method:'POST'}).then(r=>r.json()).then(d=>{
+          /* „Rulează deja" NU e o eroare, e răspunsul corect la a doua apăsare.
+             Ne agățăm de rularea care merge, cu ceasul ei, în loc să pornim a
+             doua peste ea sau să arătăm un mesaj roșu care nu spune nimic. */
+          if(d&&d.ruleaza_deja){
+            preluat=true;
+            RECON_STARE.pornit=Date.now()-(d.de_secunde||0)*1000;
+            out.innerHTML=htmlProgres();ticaie();asteaptaSfarsitul();
+            return null;}
+          if(esec(d))return null;
+          // Lanțul tocmai a produs date noi — joburile se cer după, nu înainte.
+          return fetch('/api/recon/oportunitati?limita=12').then(r=>r.json()).then(op=>{
+            if(esec(op))return;
+            RECON_STARE.rezultat=htmlDelta(d)+htmlJoburi(op);
+            arataRezultatul();});
+        }).catch(()=>{err('Serverul JA.S.Mine nu răspunde. Nimic nu s-a marcat citit.');})
+          .finally(()=>{
+            // Dacă ne-am agățat de o rulare străină, ea încă merge: ceasul și
+            // butoanele rămân cum sunt, iar paznicul de mai sus le eliberează.
+            if(preluat)return;
+            RECON_STARE.pornit=null;clearInterval(RECON_STARE.tic);
+            arataAgentul({viu:true});lock(false);});};
+      /* Rezultatul se desenează doar dacă panoul e încă deschis; altfel stă în
+         RECON_STARE și îl găsești când te întorci. */
+      const arataRezultatul=()=>{
+        if(!document.body.contains(out))return;
+        out.innerHTML=RECON_STARE.rezultat;};
+      bSt.onclick=stare;bBr.onclick=brief;bRun.onclick=ruleaza;
+      /* Ce vezi când deschizi panoul: rularea în curs bate rezultatul, care bate
+         starea. Fără scara asta, un Escape dat în timpul rulării te aducea înapoi
+         la panoul de pornire, ca și cum n-ar fi fost nimic — și de acolo apăsai
+         a doua oară „Rulează", peste una care mergea deja. */
+      if(RECON_STARE.pornit){lock(true);out.innerHTML=htmlProgres();ticaie();}
+      else if(RECON_STARE.rezultat)arataRezultatul();
+      else{
+        /* Întrebăm SERVERUL dacă rulează ceva, nu doar memoria paginii: după o
+           reîncărcare a punții, RECON_STARE e gol, dar lanțul poate fi în plină
+           desfășurare. Fără rândul ăsta ai vedea butoanele libere și ai porni a
+           doua rulare peste prima. */
+        fetch('/api/recon/ruleaza/stare').then(r=>r.json()).then(z=>{
+          if(z&&z.ruleaza){
+            RECON_STARE.pornit=Date.now()-(z.de_secunde||0)*1000;
+            lock(true);out.innerHTML=htmlProgres();ticaie();asteaptaSfarsitul();
+          } else stare();
+        }).catch(()=>stare());}
+    }},
+  agora:{n:'AGORA',s:'Aici nu comanzi nimic. Vii cu o întrebare.',
+         ...faChat('socrate')},
+  // A treia cameră care folosește `faChat`, după COMMAND și AGORA. Ce o
+  // deosebește nu e chatul, e clipul de deasupra lui — și faptul că urechea
+  // tace cât e deschisă. Vezi `faMunte`.
+  munte:{n:'MUNTELE',s:'Aici nu ceri nimic. Stai.',...faMunte()},
+  amfi:{n:'AMFITEATRUL',s:'Vorbirea în afară',html(){return '<div class="need">Încă nu există, și nu lipsește: JA.S.Mine e completă fără el.<br>Va fi locul de unde vorbește în afara ei — prezentări ținute în locul autorului.<br>Se dezvoltă <b>separat</b>, ca Agent 051, și se leagă aici când e gata.<br><em>Nicio etapă nu începe până precedenta nu e folosită real.</em></div>';}}
+};
+
+/* ── Manualul ────────────────────────────────────────────────────────
+   Zece manuale, unul pentru fiecare minipanou de perete: nouă camere plus
+   JA.S.Mine întreagă. Registru SEPARAT de `P`, dinadins — contorul de sisteme
+   din HUD numără cheile lui `P`, iar un manual nu e un sistem.
+
+   Textul stă în pagină, nu într-un fișier lângă ea: un manual ținut altundeva
+   rămâne în urmă TĂCUT.
+
+   REGULA CARE-L ȚINE VIU: ce se poate citi, se citește; ce nu, se scrie. De-aia
+   manualul cel mare nu scrie niciun port și niciun nume de model — le cere de la
+   `/api/stare` și `/api/straturi`, la fiecare deschidere. Și niciun manual nu
+   poartă cifre care se schimbă singure. */
+const MANUALE={
+  manual:{n:'MANUAL',s:'JA.S.Mine, întreagă',bule:[
+    ['Două comenzi, patru chei',
+     '<b>„engage"</b> deschide COMMAND și te ascultă. Dacă JA.S.Mine e în bară, o '
+     +'ridică — dar numai atunci: din bară tu ai chemat-o.<br><br>'
+     +'<b>„start"</b> e a doua cheie la aceeași ușă. Fiind cuvânt obișnuit, se spune '
+     +'<b>singur sau la capătul unei rostiri scurte</b> — altfel te-ar trezi din vorbă. '
+     +'„engage" se aude oriunde în frază.<br><br>'
+     +'<b>„disengage"</b> și <b>„stop"</b> sunt aceeași ușă, două chei. Închid camera '
+     +'și <b>încheie conversația</b>: firul rămâne pe disc și se redeschide din listă, '
+     +'doar continuarea se oprește.<br><br>'
+     +'Amândouă se spun la <b>capătul</b> rostirii. Ce ai spus înaintea lor pleacă la '
+     +'Sky; comanda, nu. Așa poți vorbi <em>despre</em> ele în mijlocul unei fraze fără '
+     +'să-ți închidă camera.'],
+    ['Escape, o scară cu o treaptă pe apăsare',
+     '1. trimitere în răzgândire → se anulează, textul rămâne în câmp<br>'
+     +'2. panou deschis → se închide<br>'
+     +'3. nimic deschis → JA.S.Mine se duce în bară<br><br>'
+     +'<b>Nu închide aplicația.</b> Închiderea are un singur buton, <b>×</b>, sus în '
+     +'dreapta — și e singurul buton de pe hartă.'],
+    ['Ce mai e de știut',
+     '<b>Alt+A</b> face exact ce fac cuvintele, prin aceleași funcții: ușa de rezervă '
+     +'când cuvântul nu se aude.<br><br>'
+     +'<b>Microfonul stă deschis cât e JA.S.Mine deschisă.</b> „disengage" nu-l închide, '
+     +'coboară doar în AȘTEPT — altfel n-ar avea cine să audă „engage". Nu pleacă audio '
+     +'nicăieri: transcrierea se face pe mașina asta.<br><br>'
+     +'Fiecare cameră are manualul ei, în minipanoul de pe perete cu numele ei.'],
+    ['Unde stau lucrurile',
+     'Tot ce se configurează e text pe disc, în folderul depozitului:<br>'
+     +'<code>server\\.env</code> — chei și adrese, nu intră în git<br>'
+     +'<code>server\\dictare.json</code> — urechea și cele două cuvinte<br>'
+     +'<code>server\\stiri.json</code> — sursele SENSORS<br>'
+     +'<code>date\\proiecte.json</code> — lista din ENGINEERING<br>'
+     +'<code>persona\\*.md</code> — prompturile straturilor<br><br>'
+     +'În git intră ce scrie omul: <code>persona\\</code>, <code>server\\*.json</code>, '
+     +'<code>date\\proiecte.json</code>. '
+     +'Ce acumulează sistemul, nu.'],
+    ['Cum se repornește',
+     'Scurtătura de pe desktop (<code>reporneste-jasmine.vbs</code>) <b>întreabă întâi '
+     +'serverul</b> și îl pornește doar dacă nu răspunde; tot ea pornește Docker și '
+     +'deschide fereastra. E singura ușă de intrare.<br><br>'
+     +'Fereastra se deschide imediat; dictarea se încarcă în fundal, iar COMMAND stă '
+     +'rece, cu motivul sub nod, până când te poate auzi.<br><br>'
+     +'Ieșirea prin <b>×</b> închide fereastra, stinge Docker și <b>oprește serverul</b>, '
+     +'ultimul. Scurtătura le ridică din nou pe toate.'],
+    ['Agentul 051',
+     'Program separat, cu depozit propriu (Agent051), pe '
+     +'portul 8051. JA.S.Mine îl <em>întreabă</em>, nu-i copiază datele.<br><br>'
+     +'Pornire: <code>porneste-agent051.vbs</code>, cu scurtătură în Startup.<br><br>'
+     +'<b>Când tace:</b> cât rulează lanțul nu răspunde la nicio întrebare — '
+     +'<b>„ocupat" și „mort" arată la fel din afară</b>. Harta o spune pe amândouă: '
+     +'„lucrează" cât rulează, „răspunde cu '
+     +'eroare" când e viu dar treaba lui a picat. Un agent care răspunde cu eroare '
+     +'<b>nu se repară pornindu-l</b>.']],
+    viu(M){
+      /* Partea care NU se scrie: ce e viu chiar acum. Un manual care ar avea
+         porturile tastate în el ar fi liniștitor și greșit a doua zi. */
+      const ceas=document.createElement('div');
+      ceas.className='scrie';ceas.textContent='citesc starea mașinii…';
+      M.appendChild(ceas);
+      const gata=()=>{if(ceas.parentNode)ceas.remove();};
+      Promise.all([
+        fetch('/api/stare').then(r=>r.json()).catch(()=>null),
+        fetch('/api/straturi').then(r=>r.json()).catch(()=>null)
+      ]).then(([st,str])=>{
+        if(!M.isConnected)return;
+        gata();
+        if(!st){M.appendChild(bulaMan('Acum pe mașină',
+          '<em>Serverul JA.S.Mine nu răspunde — deci nici pagina asta n-ar trebui să '
+          +'fie aici. Reîncarcă.</em>'));return;}
+        const s=st.servere||{};
+        const rand=(nume,d)=>{
+          if(!d)return '';
+          const cum=d.ocupat?'ocupat':(d.raspunde_dar_esueaza?'răspunde cu eroare':(d.viu?'viu':'oprit'));
+          return '<b>'+nume+'</b> — '+cum+(d.unde?' · <code>'+esc(d.unde)+'</code>':'')
+            +((d.motiv||d.ocupat||d.raspunde_dar_esueaza)
+              ?'<br><em>'+esc(d.motiv||d.ocupat||d.raspunde_dar_esueaza)+'</em>':'')+'<br><br>';
+        };
+        M.appendChild(bulaMan('Acum pe mașină',
+          rand('JA.S.Mine',s.jasmine)+rand('Open WebUI',s.open_webui)+rand('Agent 051',s.agent_051)));
+        const d=st.dictare||{},rz=d.rezerva||{};
+        // Rezerva se arată DOAR când s-a atins de ea cineva. `neincarcat` e
+        // cazul obișnuit — n-a picat nimic niciodată — iar un rând permanent
+        // care spune „nu s-a întâmplat nimic" e mobilier.
+        const REZ={se_incarca:'se încarcă chiar acum',gata:'a preluat, dictarea merge mai încet',
+                   a_picat:'a picat'};
+        let dt='<b>Dictarea</b> — '+(d.gata?'gata':d.se_incarca?'se încarcă chiar acum':'nu e pornită')
+          +(d.igpu?' · pe <code>'+esc(String(d.dispozitiv||'?'))+'</code>':' · fără iGPU')
+          +(d.model?'<br>model <code>'+esc(String(d.model))+'</code>':'')
+          +(d.motiv?'<br><em>'+esc(d.motiv)+'</em>':'')
+          +(REZ[rz.stare]?'<br><br><b>Rezerva</b> (faster-whisper) — '+REZ[rz.stare]
+            +(rz.motiv?'<br><em>'+esc(rz.motiv)+'</em>':''):'');
+        const cer=(d.reglaje&&d.reglaje.cer_repornire)||[];
+        if(cer.length)dt+='<br><br><b>Schimbat pe disc, neaplicat</b> (cere repornirea '
+          +'serverului): <code>'+cer.map(esc).join('</code> · <code>')+'</code>';
+        M.appendChild(bulaMan('Urechea',dt));
+        if(str&&typeof str==='object'){
+          const chei=Object.keys(str);
+          if(chei.length)M.appendChild(bulaMan('Straturile',
+            chei.map(k=>'<b>'+esc(k)+'</b> — <code>'+esc(String(str[k].model||'?'))+'</code>'
+              +(str[k].eticheta?' · '+esc(String(str[k].eticheta)):'')).join('<br>')));
+        }
+      }).catch(()=>{gata();});
+    }},
+
+  cmd:{n:'COMMAND',s:'manual',bule:[
+    ['Ce face',
+     'Camera în care ceri <b>fapte</b>. Sky răspunde, și cheamă unelte când răspunsul '
+     +'cere cifre: mailul, știrile, proiectele, jurnalul, agentul 051 — și deschide MUNTELE.<br><br>'
+     +'<b>Modelul nu produce fapte, le formulează.</b> Nota chihlimbarie de deasupra unui '
+     +'răspuns spune ce unealtă a chemat — o cifră fără notă e o cifră pe care n-a '
+     +'primit-o de nicăieri.'],
+    ['Cum se folosește',
+     'Scrii sau vorbești. Enter trimite, Shift+Enter face rând nou.<br><br>'
+     +'Cu vocea: <b>„engage"</b> deschide camera și te ascultă, <b>„disengage"</b> sau '
+     +'<b>„stop"</b> o închid. Trimiterea are o clipă de răzgândire — orice tastă o '
+     +'oprește, iar textul îți rămâne în câmp.<br><br>'
+     +'„Conversație nouă" pornește curat. Cea veche rămâne în listă, cu tokenii ei; '
+     +'când numărul se face chihlimbariu, e semn că a devenit scumpă.'],
+    ['Unde scrie',
+     'Firele stau pe disc, în <code>date\\conversatii\\</code>, scrise de serverul '
+     +'JA.S.Mine — de-aia le regăsești după reîncărcare. Persona lui Sky se scrie în <code>persona\\sky.md</code> și o duce '
+     +'serverul; scrisă de mână în interfața motorului, se pierde la următoarea '
+     +'sincronizare.'],
+    ['Când se strică',
+     'Mesajul de eroare spune <b>care din trei</b>, fiindcă se repară în trei locuri: '
+     +'motorul inaccesibil (Docker oprit), motorul care răspunde cu eroare, sau serverul '
+     +'JA.S.Mine.']],
+  },
+
+  eng:{n:'ENGINEERING',s:'manual',bule:[
+    ['Ce face',
+     'Arată proiectele cu starea lor. <b>Stare, nu evaluare</b>: nimeni nu-ți spune aici '
+     +'dacă merge bine, doar unde a rămas.'],
+    ['Cum se folosește',
+     'Se citește singur la deschidere. Lista se schimbă editând fișierul de pe disc — '
+     +'se vede la următoarea deschidere, fără repornirea serverului.'],
+    ['Unde scrie',
+     '<code>date\\proiecte.json</code>. E singurul fișier din <code>date\\</code> '
+     +'care intră în git: îl scrie omul, restul îl acumulează sistemul.'],
+    ['Când se strică',
+     'Fișierul e scris de mână, deci se strică de mână. Eroarea spune <b>linia și '
+     +'coloana</b>, nu doar „ceva n-a mers".']],
+  },
+
+  log:{n:"SHIP'S LOG",s:'manual',bule:[
+    ['Ce face',
+     'Consemnează un fapt. <b>Fără comentariu</b> — nimeni nu-ți răspunde, nimic nu se '
+     +'interpretează. E jurnalul de bord, nu o conversație.'],
+    ['Cum se folosește',
+     'Scrii și apeși Enter, sau „Consemnează". Intrarea apare sus, cu ora.<br><br>'
+     +'O idee care nu mai e de actualitate se scoate din listă cu <b>×</b>, dintr-o '
+     +'apăsare, fără confirmare — nu se pierde nimic, vezi mai jos. Lista rămâne '
+     +'scurtă și nu mai derulezi după una veche. La fel se scoate și o conversație '
+     +'din sertarul de fire, tot cu <b>×</b>, tot dintr-o apăsare.'],
+    ['Unde scrie',
+     '<code>date\\jurnal.jsonl</code>, un rând per faptă. Îl citește și Sky, '
+     +'când îl întrebi ce s-a întâmplat.<br><br>'
+     +'Ce scoți cu × <b>nu se aruncă</b>: rândul trece în '
+     +'<code>date\\jurnal-inchis.jsonl</code>, de unde se poate lua înapoi cu mâna.'],
+    ['Când se strică',
+     'Dacă serverul nu răspunde, panoul spune pe loc <b>„intrarea NU s-a salvat"</b>. '
+     +'Un jurnal care pierde în tăcere e mai rău decât unul care lipsește.']],
+  },
+
+  comms:{n:'COMMS',s:'manual',bule:[
+    ['Ce face',
+     'Raportul de mail: <b>ce a intrat necitit de la ultimul raport</b>. Expeditor, '
+     +'subiect, oră — atât; propoziția de rezumat o scrie Sky, în chat.'],
+    ['Cum se folosește',
+     'Se citește singur la deschidere, gratuit. <b>Deschiderea mută reperul</b>: data '
+     +'viitoare vezi doar ce a apărut între timp. Nu e o pierdere — raportul e pe ecran '
+     +'atunci, și rămâne pe disc.<br><br>'
+     +'Ca să te uiți înapoi, cere-i lui Sky „ce mailuri am avut în ultimele trei zile". '
+     +'Aia nu mișcă nimic.'],
+    ['Ce nu face',
+     '<b>Gmail rămâne neatins.</b> Două garanții, nu una: conexiunea e doar-citire, iar '
+     +'mesajele se deschid fără să fie marcate citite. COMMS nu trimite mail — nici acum, '
+     +'nici ca opțiune.'],
+    ['Unde scrie',
+     '<code>date\\comms.jsonl</code> — fiecare raport, întreg. De acolo se '
+     +'citește înapoi, fără să se miște reperul.']],
+  },
+
+  sensors:{n:'SENSORS',s:'manual',bule:[
+    ['Ce face',
+     'Ce a apărut în ultimele 24 de ore la sursele configurate, cu economicele deasupra. '
+     +'Titlul e link.'],
+    ['Cum se folosește',
+     'Se citește singur la deschidere și <b>nu consumă nimic</b> — nici bani, nici '
+     +'repere. Ce e stins ți-a spus deja Sky în chat.<br><br>'
+     +'De-aia panoul e și supapa: locul unde te uiți la fereastra întreagă, inclusiv la '
+     +'ce n-a ales el.'],
+    ['Unde scrie',
+     'Sursele și plafoanele stau în <code>server\\stiri.json</code>, citit la '
+     +'fiecare raport — deci o sursă nouă nu cere repornire.'],
+    ['Când se strică',
+     'O sursă picată se vede aici, <b>cu numele ei</b>, nu pe hartă. Un flux mort poate '
+     +'răspunde „e bine" și totuși să nu mai aducă nimic de luni de zile — de-asta o sursă '
+     +'se judecă după data celei mai noi știri, nu după codul de răspuns.']],
+  },
+
+  recon:{n:'RECON',s:'manual',bule:[
+    ['Ce face',
+     'Vorbește cu <b>agentul 051</b>, care caută joburi în mail și le procesează. '
+     +'JA.S.Mine îl întreabă; datele rămân la el.'],
+    ['Cum se folosește',
+     '<b>Briefing</b> — arată joburile, oricând, fără să miște nimic. Sus, ce a adus '
+     +'ultima rulare; dedesubt, toate joburile.<br><br>'
+     +'<b>Stare pipeline</b> — cifrele lui.<br><br>'
+     +'<b>Rulează + briefing</b> — caută mailuri noi și le procesează. Bara arată că '
+     +'lucrează, cronometrul cât a trecut.'],
+    ['Ce ține minte',
+     'Rularea supraviețuiește panoului: poți închide cu Escape și te întorci la ea. '
+     +'Zăvorul e pe server, nu în pagină — <b>o singură rulare deodată</b>, oricâte '
+     +'ferestre ar fi. A doua cerere nu e o eroare, ci „rulează deja, de atâtea secunde".'],
+    ['Când se strică',
+     'Nodul de pe hartă are patru stări: <b>pornit</b>, <b>lucrează</b>, <b>răspunde cu '
+     +'eroare</b>, <b>stins</b>. A treia nu se repară pornindu-l.<br><br>'
+     +'Agentul e alt program, cu depozitul lui: <code>Agent051</code>.']],
+  },
+
+  agora:{n:'AGORA',s:'manual',bule:[
+    ['Ce face',
+     'Camera lui <b>Socrate</b>. Aici nu comanzi nimic și nu ceri fapte — vii cu o '
+     +'întrebare, și primești alta.<br><br>'
+     +'<em>Socrate era <b>în</b> agora; nu <b>era</b> agora.</em> De-aia încăperea își '
+     +'păstrează numele grecesc, deși aplicația și l-a schimbat.'],
+    ['Cum se folosește',
+     '<b>Se scrie, nu se vorbește.</b> Socrate n-are ureche, dinadins: dictarea e pentru '
+     +'ce ceri repede, nu pentru ce gândești încet.<br><br>'
+     +'„stop" tastat aici <b>nu e o comandă</b> — e o replică, și ajunge la el. Cuvintele '
+     +'de adormire tastate merg doar la Sky.'],
+    ['Unde scrie',
+     'Persona lui e <code>persona\\socrate.md</code> — un singur fișier, ca la fiecare '
+     +'strat. Firele, ca la COMMAND, stau în <code>date\\conversatii\\</code>.'],
+    ['Ce urmează',
+     'Camera e <b>ridicată și folosită</b> — de-aia nodul ei e portocaliu, ca al camerelor '
+     +'care fac ceva, nu roșu ca al celor neconstruite. Crește prin folosire, nu prin '
+     +'cod: se citește o conversație purtată, se scoate ce a mers, se scrie în <code>persona\\dosar.md</code>.']],
+  },
+
+  amfi:{n:'AMFITEATRUL',s:'manual · încă nu există',bule:[
+    ['Ce își propune',
+     'Locul de unde JA.S.Mine <b>vorbește în afară</b>: prezentări ținute în locul '
+     +'autorului, cu vocea lui, pe materialul lui.<br><br>'
+     +'Nu e o cameră de conversație. E ieșirea către alți oameni — singura din toată harta.'],
+    ['De ce nu există',
+     'Se ridică <b>ultima</b>, după ce tot ce are de spus e deja aici. O voce care '
+     +'vorbește în afară înainte să aibă ce spună e o demonstrație, nu o unealtă.<br><br>'
+     +'<em>Nicio etapă nu începe până precedenta nu e folosită real.</em>'],
+    ['Nu e o lipsă',
+     '<b>JA.S.Mine e completă fără el.</b> AMFITEATRUL nu e o etapă rămasă neterminată, '
+     +'e o cameră care <b>se dezvoltă separat</b> — proiect propriu, ca Agent 051 — și '
+     +'se leagă aici când e gata, prin întrebare, nu prin mutare de cod.<br><br>'
+     +'Harta îl arată de pe acum fiindcă locul lui e ales, nu fiindcă ar lipsi ceva.']],
+  },
+
+  munte:{n:'MUNTELE',s:'manual · a treia încăpere',bule:[
+    ['Ce e',
+     'Al treilea strat: <b>Ramana</b>. Nu dă fapte ca Sky și nu întoarce întrebarea ca '
+     +'Socrate. Stă cât mai aproape de învățătura lui Ramana Maharshi, și <b>nu pune '
+     +'în ghilimele</b> ce nu poate proba — un citat e un fapt, iar aici nu există '
+     +'unealtă din care să vină.<br><br>'
+     +'E singura încăpere care e <b>doar a autorului</b>. De-aia stă mai departe de '
+     +'celelalte pe hartă: golul dintre ea și AMFITEATRU spune asta fără să scrie nimic.'],
+    ['Cum se intră',
+     'De pe hartă, sau spunându-i lui Sky <b>„deschide muntele"</b> ori <b>„pornește '
+     +'Ramana"</b>. Nu e un cuvânt nou de ținut minte: e o frază obișnuită, iar Sky '
+     +'alege unealta — vocabularul rămâne de două cuvinte, engage și disengage.'],
+    ['Clipul',
+     'Camera pornește cu un clip, la sonoritate medie. Curg în ordine, în buclă, '
+     +'iar la fiecare deschidere se reia de la primul.<br><br>'
+     +'<b>Apasă pe clip</b> ca să-l oprești; încă o dată, continuă. Restul clipului '
+     +'e suprafață de pauză, întreagă — nu are buton pentru asta.<br><br>'
+     +'Sunt pe disc, nu de pe internet: puntea nu cere nimic din afară ca să se deseneze.'],
+    ['Cum se iese',
+     'Trei uși, toate la aceeași cameră: <b>Escape</b>, <b>×</b> din colțul panoului, '
+     +'sau deschizi altceva de pe hartă.<br><br>'
+     +'La ieșire <b>clipul se oprește</b> și urechea se rearmează. Dacă apeși '
+     +'<b>Alt+A</b> din munte, ieși din cameră și intri direct în COMMAND.<br><br>'
+     +'Camera nu se închide singură niciodată.'],
+    ['Volumul și clipul următor',
+     'În colțul din dreapta-jos al clipului, apărând când duci mouse-ul peste el, '
+     +'stau două lucruri: semnul <b>▶|</b>, care trece la clipul următor, și '
+     +'reglajul de <b>volum</b>. Sunt puse deoparte anume — restul clipului e '
+     +'suprafața de pauză, iar o atingere de volum n-are voie să oprească muzica.<br><br>'
+     +'Volumul se ține minte: pleacă în <b>server\\munte.json</b>, nu în browser. '
+     +'Cache-ul ferestrei se golește la fiecare pornire, deci acolo n-ar rezista.'],
+    ['Urechea tace aici',
+     'Cât e camera deschisă, <b>microfonul e oprit</b> — singurul loc din JA.S.Mine unde '
+     +'e. Nu e prudență: clipul cântă, iar o ureche care își aude propriul difuzor '
+     +'transcrie muzică, la fiecare frază.<br><br>'
+     +'De-asta COMMAND stă rece cât ești aici, și scrie de ce. La ieșire se rearmează '
+     +'singură. Ca la Socrate, aici se <b>scrie</b>.']],
+  }
+};
+
+/* O bulă de manual arată exact ca o replică de chat: se citește la fel, nu ca
+   o fișă. Eticheta de deasupra spune ce fel de lucru urmează, nu cine l-a spus;
+   aici nu vorbește nimeni. */
+function bulaMan(et,corp){
+  const d=document.createElement('div');
+  d.className='bula voce'+(RM?'':' apare');
+  d.innerHTML='<div class="cine">'+et+'</div>'+corp;
+  return d;
+}
+function faManual(k){
+  const m=MANUALE[k];
+  return {n:m.n,s:m.s,mare:true,
+    html(){return '<div class="chat"><div class="msgs man" id="man-msgs"></div></div>';},
+    wire(){
+      const M=document.getElementById('man-msgs');
+      if(!M)return;
+      let i=0;
+      // Bulele intră una câte una, ca un răspuns care se scrie. Fiecare pas
+      // verifică întâi că panoul mai e în pagină: Escape îl poate închide la
+      // jumătatea șirului, iar restul ar ateriza în fereastra următoare.
+      const pune=()=>{
+        if(!M.isConnected)return;
+        if(i>=m.bule.length){if(m.viu)m.viu(M);return;}
+        const b=m.bule[i++];
+        M.appendChild(bulaMan(b[0],b[1]));
+        // Fără derulare automată, spre deosebire de chat: acolo ce contează e
+        // ultima replică, aici e prima propoziție. Un manual care se deschide
+        // la coadă te pune să derulezi înapoi ca să afli de unde începe.
+        setTimeout(pune,RM?0:150);
+      };
+      pune();
+    }};
+}
+
+/* ── Chatul, o singură dată ──────────────────────────────────────────
+   Socrate și Sky sunt două configurări ale aceleiași funcții, nu două copii.
+   Diferă stratul, eticheta bulei, textul de așteptare — și starea, care e a
+   fiecăruia. Restul (fereastra mare, lista, contorul, uneltele) e comun.
+
+   Starea stă aici, pe strat: panourile se distrug la închidere, firele nu, iar
+   comutarea între COMMAND și AGORA nu are voie să le amestece. */
+const STARI={};
+
+/* Cusătura dintre dictare și chat. Dictarea nu cunoaște panourile: știe doar
+   că undeva există un câmp în care scrie și un buton pe care apasă.
+   Se pune DOAR pentru stratul „sky" — Socrate nu primește ureche, iar asta
+   trebuie să se vadă în cod, nu doar în document. */
+let URECHE=null;   // {camp, trimite} cât panoul COMMAND e deschis, altfel null
+
+function stareChat(strat){
+  if(!STARI[strat])STARI[strat]={istoric:[],id:null,tokeni:0,titlu:'',inZbor:false,incheie:false};
+  return STARI[strat];
+}
+
+/* Încheie firul: următoarea replică începe o conversație nouă.
+
+   Starea trăiește în pagină, nu în panou, deci fără asta „disengage" ar
+   ascunde doar ecranul: un fir viu reluat după o oră plătește la fiecare
+   replică tot istoricul ca intrare.
+
+   Nu se pierde nimic: firul e scris pe disc și se redeschide din listă. Se
+   oprește doar continuarea automată.
+
+   Dacă o replică e în zbor, răspunsul ei ar repopula starea DUPĂ golire — deci
+   se cere încheierea, iar `finally` din trimite() o execută. */
+function incheieFirul(strat){
+  const st=stareChat(strat);
+  if(st.inZbor){st.incheie=true;return;}
+  st.istoric.length=0;st.id=null;st.tokeni=0;st.titlu='';st.incheie=false;
+}
+
+/* Tabelul de straturi vine de la server, din persona/straturi.json. Puntea nu
+   cunoaște niciun id de model: trimite „sky" sau „socrate", iar serverul
+   traduce. Eticheta bulei și textul de așteptare vin de acolo, nu din cod. */
+let STRATURI=null;
+function cereStraturi(){
+  return fetch('/api/straturi').then(r=>r.json())
+    .then(d=>{STRATURI=(d&&typeof d==='object')?d:null;})
+    .catch(()=>{STRATURI=null;});
+}
+
+function faChat(strat){
+  return {
+  mare:true,
+  html(){
+    // Fără tabelul de straturi nu se poate desena nimic: n-am nici eticheta, nici
+    // textul de așteptare. Panoul o spune, nu rămâne alb — precedentul RECON.
+    if(!(STRATURI&&STRATURI[strat]))
+      return '<div class="need">Nu pot citi lista de straturi.<br>'
+        +'<em>GET /api/straturi nu răspunde. Serverul JA.S.Mine pornește doar cu '
+        +'persona/straturi.json valid — vezi consola lui.</em></div>';
+    // Id-urile sunt aceleași la ambele panouri — în sheet trăiește unul singur
+    // la un moment dat, deci nu se ciocnesc. Ce se poate ciocni sunt cererile
+    // rămase în zbor de la panoul dinainte; de-aia fiecare callback verifică
+    // mai jos că elementul lui mai e în pagină.
+    return '<div class="chat">'
+      +'<div class="chat-bar">'
+        +'<span class="chat-tit" id="c-tit"></span>'
+        +'<span class="chat-tok" id="c-tok"></span>'
+        +'<button class="btn doar-ingust" id="c-lista-btn" style="padding:6px 11px">Conversații</button>'
+        +'<button class="btn" id="c-nou" style="padding:6px 11px">Conversație nouă</button>'
+      +'</div>'
+      +'<div class="chat-lung" id="c-lung" hidden>conversație lungă — ia în calcul una nouă</div>'
+      +'<div class="chat-mij">'
+        +'<div class="lista" id="c-lista">'
+          +'<div class="lista-nota" id="c-nota" hidden></div>'
+          +'<div id="c-randuri"></div>'
+        +'</div>'
+        +'<div class="msgs" id="c-msgs"></div>'
+      +'</div>'
+      +'<div class="compune">'
+        +'<textarea id="c-in" placeholder="Întreabă. Enter trimite, Shift+Enter rând nou."></textarea>'
+        +'<button class="btn" id="c-go" style="padding:0 17px">Trimite</button>'
+      +'</div>'
+    +'</div>';},
+    wire(){
+      const descriere=STRATURI&&STRATURI[strat];
+      if(!descriere){
+        // Poate răspunsul de la /api/straturi n-a ajuns încă la prima deschidere.
+        // Mai încerc o dată; dacă vine, redesenez panoul. Altfel rămâne mesajul
+        // din html() — o singură reîncercare, nu o buclă pe un server căzut.
+        cereStraturi().then(()=>{if(STRATURI&&STRATURI[strat]&&selected)openPanel(selected);});
+        return;}
+      const M=document.getElementById('c-msgs'),I=document.getElementById('c-in'),
+            B=document.getElementById('c-go'),T=document.getElementById('c-tok'),
+            TT=document.getElementById('c-tit'),LG=document.getElementById('c-lung'),
+            LI=document.getElementById('c-lista'),LR=document.getElementById('c-randuri'),
+            NO=document.getElementById('c-nota');
+      const st=stareChat(strat);
+      // Panoul închis între timp înseamnă că elementele au ieșit din pagină.
+      // Fără garda asta, răspunsul lui Socrate ar ateriza în fereastra lui Sky.
+      const alMeu=()=>M.isConnected;
+      const jos=()=>{M.scrollTop=M.scrollHeight;};
+      /* ESCAPAREA E PRIMA, legarea a doua, și ordinea nu e detaliu: invers, o
+         adresă scrisă de model ar putea căra marcaj în pagină. Aici linkul se
+         culege din text DEJA curățat, deci nu poate conține nici `<`, nici
+         ghilimele — și începe cu http, deci nu poate fi `javascript:`.
+         Fără legare, linkurile de la SENSORS ar ajunge în chat ca text mort. */
+      const corp=s=>esc(s).replace(/\n/g,'<br>').replace(/https?:\/\/[^\s<]+/g,u=>{
+        let link=u,coada='';
+        // `&quot;` lipit la capăt vine din escapare, nu din adresă.
+        const ent=link.match(/(&quot;|&gt;|&#39;)+$/);
+        if(ent){coada=ent[0];link=link.slice(0,-coada.length);}
+        // Punctul de la capătul propoziției nu face parte din link.
+        const p=link.match(/[.,;:!?)\]]+$/);
+        if(p){coada=p[0]+coada;link=link.slice(0,-p[0].length);}
+        return '<a href="'+link+'" target="_blank" rel="noopener">'+link+'</a>'+coada;});
+      const bula=(cls,cine,html)=>{
+        const d=document.createElement('div');
+        d.className='bula '+cls;
+        d.innerHTML='<div class="cine">'+cine+'</div>'+html;
+        M.appendChild(d);jos();return d;};
+      // Peste prag doar avertizează. Nu taie istoricul și nu blochează
+      // trimiterea: cât plătește omul pentru o conversație lungă e decizia lui.
+      const contor=()=>{
+        const mult=st.tokeni>40000;
+        T.textContent=st.tokeni.toLocaleString('ro-RO')+' tokeni';
+        T.classList.toggle('mult',mult);
+        LG.hidden=!mult;};
+      // Ecranul se reconstruiește din `st.istoric`, iar el vine de pe disc,
+      // prin server. Pagina nu mai ține o versiune a ei.
+      //
+      // Firul conține și mesajele de unealtă. Ele nu se arată ca replici: un
+      // JSON de 500 de octeți într-o bulă n-ar spune omului nimic. Rămâne doar
+      // urma — „a verificat: recon_stare" — ca să știe de unde vin cifrele.
+      const reface=()=>{
+        M.innerHTML='';
+        if(!st.istoric.length)M.innerHTML='<div class="empty">Nicio întrebare încă.</div>';
+        else st.istoric.forEach(m=>{
+          if(m.role==='tool')return;                       // rezultatul brut, ascuns
+          if(m.role==='assistant'&&Array.isArray(m.tool_calls)&&m.tool_calls.length){
+            const n=m.tool_calls.map(c=>esc((c.function||{}).name||'?')).join(', ');
+            M.insertAdjacentHTML('beforeend','<div class="unealta">a verificat: '+n+'</div>');
+            return;}
+          if(!m.content)return;                            // bulă goală, nimic de arătat
+          bula(m.role==='user'?'om':'voce',m.role==='user'?'Tu':descriere.eticheta,corp(m.content));
+        });
+        TT.textContent=st.titlu||'Conversație nouă';
+        contor();jos();};
+      const lock=v=>{
+        [B,I].forEach(e=>{e.disabled=v;});
+        B.style.opacity=v?'.45':'';B.style.pointerEvents=v?'none':'';};
+
+      // ── Lista conversațiilor ──────────────────────────────────────
+      // Lista e un lux; chatul nu depinde de ea. Orice eșec aici se spune
+      // într-o notă și se oprește acolo — poți purta o conversație nouă
+      // chiar dacă lista n-a apucat să se încarce.
+      let conversatii=[];
+      const nota=m=>{NO.textContent=m;NO.hidden=!m;};
+      const deseneazaLista=()=>{
+        if(!conversatii.length){LR.innerHTML='<div class="empty">Nicio conversație încă.</div>';return;}
+        LR.innerHTML=conversatii.map(c=>{
+          const t=c.titlu||'(fără titlu)';
+          // Cifra scurtată, fără cuvântul „tok": textul întreg nu încape în
+          // coloană. Vezi scurtTok().
+          const meta=(c.cand?stamp(new Date(c.cand)):'—')+' · '+scurtTok(c.tokeni||0);
+          return '<div class="conv'+(c.id===st.id?' acum':'')+'" data-id="'+esc(c.id)+'" title="'+esc(t)+'">'
+            +'<div class="conv-t">'+esc(t)+'</div>'
+            +'<div class="conv-m">'+esc(meta)+'</div>'
+            +'<button class="conv-x" title="Șterge conversația">×</button></div>';
+        }).join('');};
+      const cereLista=()=>{
+        fetch('/api/conversatii').then(r=>r.json())
+          .then(d=>{
+            if(!alMeu())return;
+            // Fiecare strat își vede doar firele lui. Lista lui Sky plină de
+            // conversații cu Socrate ar fi zgomot: nu le poate continua oricum,
+            // fiindcă fiecare fir e legat de stratul cu care a început.
+            conversatii=(Array.isArray(d)?d:[]).filter(c=>c.strat===strat);
+            nota('');deseneazaLista();})
+          .catch(()=>{if(!alMeu())return;
+            LR.innerHTML='';nota('Lista nu s-a încărcat. Poți scrie oricum.');});};
+      // O singură definiție a lui „fir nou", chemată din două locuri: butonul de
+      // aici și ieșirea din cameră. Golirea scrisă de două ori ar fi apucat să
+      // difere.
+      const goleste=()=>{
+        incheieFirul(strat);
+        reface();deseneazaLista();};
+      const incarca=id=>{
+        // Cât stratul scrie, istoricul e la mijlocul unui schimb. Schimbat acum,
+        // răspunsul care vine s-ar lipi de altă conversație.
+        if(B.disabled)return;
+        fetch('/api/conversatii/'+encodeURIComponent(id)).then(r=>r.json()).then(d=>{
+          if(!alMeu())return;
+          if(!d||!d.ok){nota('Conversația nu s-a putut deschide.');return;}
+          const c=d.date||{};
+          st.istoric.length=0;(c.mesaje||[]).forEach(m=>st.istoric.push(m));
+          st.id=id;st.tokeni=c.tokeni||0;st.titlu=c.titlu||'';
+          nota('');reface();deseneazaLista();
+          LI.classList.remove('desfasurata');   // sertarul se închide după alegere
+          I.focus();
+        }).catch(()=>{if(alMeu())nota('Serverul nu răspunde.');});};
+      const sterge=id=>{
+        fetch('/api/conversatii/'+encodeURIComponent(id),{method:'DELETE'})
+          .then(r=>r.json()).then(d=>{
+            if(!alMeu())return;
+            if(!d||!d.ok){nota('Nu s-a putut șterge.');return;}
+            // Ștearsă de pe disc conversația deschisă, ecranul n-o mai poate arăta.
+            if(id===st.id)goleste();
+            cereLista();
+          }).catch(()=>{if(alMeu())nota('Serverul nu răspunde. Nu s-a șters nimic.');});};
+      // Un click, o delegare: rândurile se redesenează des, iar ascultătorii
+      // puși pe fiecare rând ar trebui refăcuți de fiecare dată.
+      LR.onclick=e=>{
+        const rand=e.target.closest('.conv');
+        if(!rand)return;
+        const id=rand.dataset.id;
+        // FĂRĂ confirmare, ca `×` din SHIP'S LOG: firul se mută în
+        // `date\conversatii-inchise\`, deci se ia înapoi. Regula e una singură în
+        // toată puntea: se întreabă acolo unde nu se poate lua înapoi, nu acolo
+        // unde se poate.
+        if(e.target.closest('.conv-x')){sterge(id);return;}
+        incarca(id);};
+      document.getElementById('c-lista-btn').onclick=()=>LI.classList.toggle('desfasurata');
+
+      const trimite=()=>{
+        const v=I.value.trim();
+        if(!v||B.disabled)return;
+        /* Adormirea TASTATĂ, aceeași ușă ca cea vorbită: nu pleacă la Sky.
+           Altfel ultimul lucru pe care i l-ai scrie ar fi chiar ordinul de a nu
+           te mai deranja — plătit, cu un răspuns derutant pe deasupra.
+
+           NUMAI la Sky. La Socrate „stop" e FRÂNA lui, un mesaj adevărat la care
+           răspunde; prins aici, i-ar închide panoul în loc să-l oprească din
+           întrebat. Vorbit nu se pune problema — urechea e a lui Sky. */
+        if(strat==='sky'&&esteAdormire(v)){
+          I.value='';
+          // Și tastat, camera închisă înseamnă fir încheiat. Chemat aici, nu
+          // lăsat pe seama lui closePanel: acolo firul se încheie doar dacă se
+          // ieșea din ENGAGE, iar tastatul merge și cu urechea oprită.
+          incheieFirul(strat);
+          closePanel('disengage tastat');return;}
+        M.querySelectorAll('.empty,.bula.rea').forEach(e=>e.remove());
+        // Bula apare imediat, dar NU intră în st.istoric: firul îl scrie
+        // serverul. Dacă cererea pică, n-avem nimic de dat înapoi.
+        const bulaOm=bula('om','Tu',corp(v));
+        I.value='';lock(true);
+        // Zece secunde de ecran mort par o pană. Indicatorul spune că se lucrează.
+        const asteptare=document.createElement('div');
+        asteptare.className='scrie';asteptare.textContent=descriere.asteptare;
+        M.appendChild(asteptare);jos();
+
+        const cade=m=>{
+          // Nimic de curățat din istoric — n-a intrat nimic. Doar bula de pe
+          // ecran dispare, iar întrebarea se întoarce în câmp.
+          bulaOm.remove();
+          I.value=v;
+          bula('rea','Eroare',esc(m)+'<div class="nota">Întrebarea a rămas în câmp.</div>');};
+
+        // Steagul e al STĂRII, nu al ecranului: `lock()` dezactivează butoanele
+        // panoului, dar panoul poate să nu mai existe — „disengage" închide
+        // camera cu replica încă în zbor. Fără el, răspunsul întârziat ar scrie
+        // id și istoric peste un fir tocmai încheiat, și conversația următoare
+        // ar continua-o pe cea de dinainte.
+        st.inZbor=true;
+        fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({mesaj:v,strat,id:st.id})})
+          .then(r=>r.json())
+          .then(d=>{
+            // Starea se actualizează chiar dacă panoul s-a închis între timp:
+            // firul e al stratului, nu al ferestrei. Doar ecranul se lasă în pace.
+            if(!d||!d.ok){if(alMeu()){asteptare.remove();
+              cade((d&&d.eroare)||'răspuns necunoscut de la server');}return;}
+            const eraNoua=!st.titlu;
+            if(d.id)st.id=d.id;
+            if(typeof d.tokeni_conversatie==='number')st.tokeni=d.tokeni_conversatie;
+            if(typeof d.titlu==='string')st.titlu=d.titlu;
+            // Firul se ia întreg de la server, nu se completează local. Aici
+            // intră și mesajele de unealtă, pe care pagina nu le-ar fi putut
+            // inventa.
+            if(Array.isArray(d.mesaje)){st.istoric.length=0;st.istoric.push(...d.mesaje);}
+            // Singura unealtă care nu se termină în text, ci într-un gest. Vezi
+            // `deschideMuntele`. `reusit!==false`, nu `reusit===true`: însemnarea
+            // scrisă de server marchează eșecul explicit, iar o unealtă fără
+            // câmpul ăsta a mers.
+            if(Array.isArray(d.unelte)&&d.unelte.some(
+                 u=>u&&u.nume==='deschide_muntele'&&u.reusit!==false)){
+              deschideMuntele();return;}
+            if(!alMeu())return;
+            asteptare.remove();
+            reface();
+            // Răspunsul e bun, doar nu s-a scris pe disc. Discret, nu alarmant.
+            if(d.avertisment){
+              const bule=M.querySelectorAll('.bula.voce');
+              if(bule.length)bule[bule.length-1].insertAdjacentHTML(
+                'beforeend','<div class="nota">⚠ '+esc(d.avertisment)+'</div>');}
+            // Abia acum există pe disc ce să apară în listă. La replicile
+            // următoare doar crește cifra tokenilor — se corectează pe loc, că
+            // o cerere de rețea pentru un număr pe care îl avem deja e irosită.
+            if(eraNoua)cereLista();
+            else{
+              const c=conversatii.find(c=>c.id===st.id);
+              if(c){c.tokeni=st.tokeni;c.mesaje=st.istoric.length;}
+              deseneazaLista();}
+            jos();})
+          .catch(()=>{if(alMeu()){asteptare.remove();cade('serverul JA.S.Mine nu răspunde');}})
+          .finally(()=>{
+            st.inZbor=false;
+            // Camera s-a închis cât răspunsul era pe drum: firul s-a scris pe
+            // disc, iar acum se încheie. Ordinea contează — invers, golirea ar
+            // fi fost ștearsă de răspuns.
+            if(st.incheie)incheieFirul(strat);
+            if(alMeu()){lock(false);I.focus();}});};
+
+      I.addEventListener('keydown',e=>{
+        if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();trimite();}});
+      B.onclick=trimite;
+      document.getElementById('c-nou').onclick=()=>{
+        if(B.disabled)return;   // nu în timpul unui răspuns în zbor
+        goleste();I.focus();};
+      reface();cereLista();I.focus();
+      if(strat==='sky'){
+        URECHE={camp:I,trimite,viu:()=>M.isConnected};
+      }
+    }};
+}
+
+/* ── MUNTELE: clipul ─────────────────────────────────────────────────
+   Camera lui Ramana e chatul lui Socrate plus un clip deasupra. Chatul e
+   `faChat('ramana')`, neatins — a treia cameră care îl folosește.
+
+   CLIPURILE, în ordinea din `server\munte.json`, în buclă. La fiecare
+   deschidere a camerei se reia de la primul: o cameră care continuă de unde ai
+   lăsat-o e o cameră despre care trebuie să-ți amintești ceva.
+
+   URECHEA TACE CÂT E CAMERA DESCHISĂ — singura excepție de la „microfonul stă
+   deschis cât e JA.S.Mine deschisă": **camera asta face sunet**. Un microfon
+   care își aude propriul difuzor transcrie muzică, iar „stop" și „start" se
+   caută în tot ce se transcrie. Anularea de ecou a Chrome-ului probabil ar
+   ține; „probabil" nu e o cifră.
+   Restul punții nu se schimbă: la ieșire urechea se rearmează singură. */
+const MUNTE={clipuri:[],volum:.5,lipsesc:0,i:0,video:null,tacut:false,cerut:null,
+             ceasVol:null,dinCmd:false};
+
+/* Rama se desenează ÎNAINTE să se știe ce e pe disc: lista vine cu o cerere, iar
+   un panou care așteaptă o cerere ca să deseneze ceva e un panou gol în cea mai
+   proastă clipă. Ce se poate citi, se citește — titlul și volumul vin din
+   `munte.json`, nu sunt tastate aici. */
+function htmlClip(){
+  return '<div class="munte-clip" id="m-clip">'
+    +'<video id="m-video" playsinline preload="auto"></video>'
+    +'<div class="munte-semn"><i></i></div>'
+    +'<div class="munte-tit" id="m-tit"></div>'
+    +'<div class="munte-cmd" id="m-cmd">'
+      +'<div class="munte-next" id="m-next" title="Clipul următor"></div>'
+      +'<span>VOL</span>'
+      +'<input type="range" min="0" max="1" step="0.05" id="m-vol-in" aria-label="Volum">'
+    +'</div>'
+    +'<div class="munte-fara" id="m-fara" hidden></div>'
+  +'</div>';
+}
+
+function urmatorulClip(){
+  const v=MUNTE.video;if(!v||!MUNTE.clipuri.length)return;
+  const c=MUNTE.clipuri[MUNTE.i];
+  const t=document.getElementById('m-tit');
+  if(t)t.textContent=c.titlu;
+  v.src='/munte/'+encodeURIComponent(c.fisier);
+  // `play()` întoarce o promisiune care POATE fi refuzată: fereastra deschisă cu
+  // vocea n-are niciun gest de om în spate, iar Chrome blochează sunetul fără
+  // gest. Kiosk-ul pornește cu `--autoplay-policy=no-user-gesture-required`, dar
+  // o plasă costă trei rânduri, iar un clip care nu pornește și nu spune nimic
+  // arată exact ca o cameră stricată.
+  const pornit=v.play();
+  if(pornit&&pornit.catch)pornit.catch(()=>{
+    const c=document.getElementById('m-clip');
+    if(c)c.classList.add('stat');
+    const f=document.getElementById('m-fara');
+    if(f){f.hidden=false;f.textContent='Apasă clipul ca să pornească.';}
+  });
+}
+
+function legClipul(){
+  const v=document.getElementById('m-video');
+  if(!v)return;
+  MUNTE.video=v;MUNTE.i=0;
+
+  // Clipul e suprafața apăsabilă pentru pauză, nu un buton pus în panou: aceeași
+  // specie cu un nod sau un minipanou.
+  // Buclă: după ultimul, primul. `ended` nu se declanșează pe o eroare de rețea,
+  // deci `error` sare mai departe la fel — un clip stricat nu oprește camera.
+  // Scrisă aici, deasupra, fiindcă o cheamă și suprafața de skip de mai jos.
+  const inainte=()=>{
+    if(!MUNTE.clipuri.length)return;
+    MUNTE.i=(MUNTE.i+1)%MUNTE.clipuri.length;urmatorulClip();};
+
+  const rama=document.getElementById('m-clip');
+  /* Steagul se pune și se ȘTERGE aici, la fiecare `pointerdown` de pe clip — nu
+     în `rama.onclick`, care nu rulează deloc când gestul a fost oprit de bară.
+     Pus acolo, ar fi rămas agățat pe `true` după orice atingere de volum și ar fi
+     înghițit următoarea pauză. Un steag care se pune într-un loc și se șterge în
+     altul e adevărat doar pe drumul pe care l-ai încercat. */
+  rama.onpointerdown=e=>{
+    MUNTE.dinCmd=!!(e.target.closest&&e.target.closest('#m-cmd'));};
+  rama.onclick=()=>{
+    /* Gestul care a plecat din bara de comenzi NU e o pauză, oricât de sigur ar
+       fi browserul că a fost un clic pe clip. Vezi `rama.onpointerdown`. */
+    if(MUNTE.dinCmd)return;
+    if(!MUNTE.clipuri.length)return;
+    const f=document.getElementById('m-fara');
+    if(f)f.hidden=true;
+    if(v.paused){v.play().catch(()=>{});rama.classList.remove('stat');}
+    else{v.pause();rama.classList.add('stat');}
+  };
+  /* Bara de comenzi. `stopPropagation` pe TOATĂ rama ei, nu doar pe cursor: un
+     clic lângă cursor, pe fundalul barei, ar urca la clip și ar pune pauză.
+
+     Atât nu ajunge: la TRAGEREA cursorului de volum, degetul se ridică aproape
+     întotdeauna în afara barei, iar browserul emite `click` pe cel mai apropiat
+     STRĂMOȘ COMUN al lui `pointerdown` și `pointerup` — adică pe clip. Niciun
+     `stopPropagation` de aici nu-l poate opri: se apără la plecare, cu un steag
+     pus la `pointerdown`, citit și șters de `rama.onclick`.
+
+     Nu se pierde niciun clic bun: un `pointerdown` pe comenzi urmat de un `click`
+     pe clip nu e niciodată un gest de pauză. */
+  const RC=document.getElementById('m-cmd'),VI=document.getElementById('m-vol-in');
+  RC.onclick=e=>e.stopPropagation();
+  /* Clipul următor. A doua suprafață pe clip, ca reglajul de volum — nu un
+     control adăugat într-un panou. Titlul nu se schimbă de aici: îl scrie
+     `urmatorulClip`, o singură dată. */
+  document.getElementById('m-next').onclick=e=>{e.stopPropagation();inainte();};
+  VI.oninput=()=>{
+    const nou=parseFloat(VI.value);
+    v.volume=nou;MUNTE.volum=nou;
+    /* Se scrie pe disc DUPĂ ce mâna s-a oprit, nu la fiecare pixel: un `input`
+       tras dintr-un capăt în altul dă zeci de evenimente, și fiecare ar fi o
+       rescriere de fișier. 400 ms — destul cât să nu se simtă, destul cât să nu
+       se scrie de douăzeci de ori. */
+    clearTimeout(MUNTE.ceasVol);
+    MUNTE.ceasVol=setTimeout(()=>{
+      fetch('/api/munte/volum',{method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({volum:nou})}).catch(()=>{});
+    },400);
+  };
+  v.onplay=()=>rama.classList.remove('stat');
+  v.onpause=()=>{if(!v.ended)rama.classList.add('stat');};
+  v.onended=inainte;
+  v.onerror=inainte;
+
+  // Lista se cere O SINGURĂ DATĂ per fereastră și se ține în MUNTE: fișierele nu
+  // apar pe disc cât e puntea deschisă, iar cererea asta ar fi plătită la
+  // fiecare deschidere de cameră.
+  const gata=()=>{
+    v.volume=MUNTE.volum;
+    VI.value=MUNTE.volum;
+    if(MUNTE.clipuri.length){urmatorulClip();return;}
+    const f=document.getElementById('m-fara');
+    if(f){f.hidden=false;
+      f.innerHTML=MUNTE.lipsesc
+        ? 'Clipurile nu sunt pe disc.<br>Se aduc cu <b>py server\\descarca-munte.py</b>.'
+        : 'Niciun clip în <b>server\\munte.json</b>.';}
+  };
+  if(MUNTE.cerut){gata();return;}
+  fetch('/api/munte/lista').then(r=>r.json()).then(d=>{
+    MUNTE.cerut=true;
+    if(d&&Array.isArray(d.clipuri))MUNTE.clipuri=d.clipuri;
+    if(d&&typeof d.volum==='number')MUNTE.volum=d.volum;
+    if(d&&typeof d.lipsesc==='number')MUNTE.lipsesc=d.lipsesc;
+    if(!v.isConnected)return;      // camera s-a închis cât venea lista
+    gata();
+  }).catch(()=>{
+    MUNTE.cerut=true;
+    if(!v.isConnected)return;
+    const f=document.getElementById('m-fara');
+    if(f){f.hidden=false;f.textContent='Nu pot citi lista clipurilor.';}
+  });
+}
+
+/* Se cheamă din DOUĂ locuri, și amândouă sunt necesare: `arataInSheet` acoperă
+   trecerea la alt panou sau la un manual, `closePanel` acoperă Escape, `×` și
+   clicul pe hartă. Un `<video>` scos din pagină cu `innerHTML` CONTINUĂ SĂ CÂNTE
+   în Chrome — de-aia nu e de ajuns că elementul dispare.
+
+   Idempotentă: chemată de două ori la rând, a doua oară nu face nimic.
+
+   `rearmeaza=false` oprește clipul dar NU repornește urechea, și există pentru
+   un singur drum: `Alt+A` apăsat cât ești în munte. Fără el, două porniri de
+   ureche pleacă deodată — a mea de aici și a lui `intraInEngage` — fiindcă
+   `pornesteUrechea` își pune steagul abia la CAPĂT, deci garda de la intrare le
+   lasă pe amândouă să treacă. Rezultatul ar fi două contexte audio pe același
+   microfon, adică exact felul de defect care nu se vede: urechea merge, doar
+   costă dublu. Se dezleagă din ordine, nu dintr-un zăvor nou. */
+function opresteMuntele(rearmeaza){
+  const v=MUNTE.video;
+  if(v){
+    try{v.onended=null;v.onerror=null;v.pause();v.removeAttribute('src');v.load();}catch(e){}
+    MUNTE.video=null;
+  }
+  if(MUNTE.tacut){
+    MUNTE.tacut=false;
+    jurnalTrezire('munte-reia',rearmeaza===false?'engage':'',null);
+    // Idempotentă și ea: iese pe loc dacă urechea e deja pornită.
+    if(rearmeaza!==false)armeazaTrezirea();
+  }
+}
+
+/* Ușa cerută cu gura. Sky a chemat `deschide_muntele`, iar tot mesajul de la
+   server către pagină e faptul că unealta a fost chemată — `/api/chat` întoarce
+   deja lista în `unelte`. Niciun canal nou.
+
+   Ordinea celor trei rânduri nu e indiferentă:
+
+   1. `ridicaPuntea` ridică NUMAI dacă JA.S.Mine e în bară. O unealtă n-are voie
+      să sară peste ce face omul — dar de acolo a chemat-o chiar el, deci n-ar
+      avea unde vedea ce a cerut.
+   2. Ieșirea din ENGAGE ÎNAINTE de panou, fiindcă ea încheie firul lui Sky. La
+      Ramana se scrie, ca la Socrate, iar aici mai e un motiv: acolo cântă un
+      clip, deci un microfon deschis ar trimite muzică la Sky, pe bani.
+   3. Panoul la urmă. `openPanel` trece prin `arataInSheet`, care oprește orice
+      clip vechi și pornește de la primul.
+
+   Se cheamă înaintea gărzii `alMeu()` din `trimite()`: camera trebuie să se
+   deschidă și dacă panoul COMMAND s-a închis cât venea răspunsul. */
+function deschideMuntele(){
+  ridicaPuntea();
+  intraInAstept('cerut muntele');
+  openPanel('munte');
+}
+
+function faMunte(){
+  const RAMANA=faChat('ramana');
+  return {
+    mare:true,
+    plin:true,
+    html(){return htmlClip()+RAMANA.html();},
+    wire(){
+      // Urechea tace ÎNAINTE de primul cadru cu sunet, nu după.
+      if(!MUNTE.tacut){
+        MUNTE.tacut=true;
+        jurnalTrezire('munte-tace','',null);
+        opresteUrechea('muntele');
+        urecheaTace('muntele cântă · Alt+A');
+      }
+      legClipul();
+      RAMANA.wire();
+    }};
+}
+
+/* ── Dictarea și cuvântul de trezire ─────────────────────────────────
+   Vocabularul e de DOUĂ CUVINTE, și nimic altceva de ținut minte:
+
+     „engage"     → Sky pornește: COMMAND se deschide și te ascultă
+     („start")    → aceeași ușă ca „engage"
+     „disengage"  → Sky se oprește: JA.S.Mine se întoarce la așteptat
+     („stop")     → aceeași ușă ca „disengage"
+
+   Cele din paranteze nu sunt cuvinte în plus de ținut minte: sunt a doua cheie
+   la aceeași ușă, și fiecare a intrat pe o măsurătoare — regula după care se
+   caută fiecare stă la `cautaCuvantul`.
+
+   Deschizi JA.S.Mine și microfonul e deja deschis, în starea AȘTEPT. Acolo fiecare
+   rostire se transcrie LOCAL — OpenVINO pe placa integrată, ~0,25 secunde,
+   zero tokeni, fără internet — și se caută cuvântul în ea. Nu se trimite nimic
+   nicăieri.
+   Rostirile mai lungi decât plafonul nici măcar nu se transcriu: un cuvânt de
+   trezire e un cuvânt.
+
+   După „engage" ești în ENGAGE: vorbești → taci → fraza pleacă la Sky → urechea
+   rămâne deschisă. Tăcerea singură nu declanșează nimic; poți sta un minut pe
+   gânduri după răspunsul lui Sky.
+
+   NIMIC nu iese singur din ENGAGE: dacă nu spui nimic, camera rămâne deschisă,
+   iar peste o oră poți continua cu altă cerere.
+
+   Alt+A face același lucru ca cele două cuvinte, și rămâne. Nu ca lucru de ținut
+   minte, ci ca ușă de rezervă când cuvântul nu se aude sau când iGPU-ul e mort
+   și AȘTEPT nu poate porni.
+
+   Ascultarea e permanentă, dar numai cât e JA.S.Mine deschisă, iar proba e
+   locală: nu pleacă audio nicăieri și nu costă niciun ban. Cât e în ENGAGE,
+   orice se vorbește în cameră ajunge la Sky.
+
+   Fără pictograme, fără butoane. Starea trăiește în nodul COMMAND: textul de
+   sub el, particulele care respiră cu vocea, elipsele care se strâng. În AȘTEPT
+   particulele TAC — altfel harta ar pulsa toată ziua. */
+
+const U={
+  pornita:false, mod:'', stare:'', flux:null, ac:null, nod:null,
+  r:null,      // {rec, bucati} — reportofonul curent și vectorul LUI
+  // Ce se DESENEAZĂ, hrănit de pe firul audio și citit de rAF în frame().
+  // Numărătoarea nu mai trece pe aici; astea două sunt doar pentru ochi.
+  nivel:0, strang:0,
+  // O singură probă în zbor, plus un loc de așteptare. Vezi `trimiteProba()`.
+  probaInZbor:false, probaLaRand:null,
+  razg:null, cerere:0, reglaje:null
+};
+
+// Implicitele NU sunt configurare: sunt plasa pentru cazul în care
+// /api/dictare nu răspunde. Configurarea e în server/dictare.json.
+// `trezire` lipsește dinadins: fără server nu se știe după ce cuvânt asculți,
+// iar o ureche care ascultă după un cuvânt ghicit e mai rea decât una stinsă.
+const U_IMPLICIT={prag_tacere_secunde:3,secunde_razgandire:1,
+                  prag_volum:.012,secunde_minim_vorbire:.15,
+                  secunde_incredere_vorbire:.4,trezire:null};
+
+/* După atâtea secunde de liniște în care n-ai spus nimic, reportofonul se
+   reciclează. Altfel tamponul adună toată pauza dintre replici (32,6 s de audio
+   pentru o frază de 2 s), iar Whisper lucrează proporțional și, pe atâta
+   liniște, halucinează.
+
+   1,2 s: la 3 s blob-ul purta ~2 s de liniște în față, plătite de procesor.
+   Și nu 1,0: o pauză de gândit în mijlocul frazei trece de 1 s, iar începutul
+   frazei ar rămâne într-un tampon reciclat.
+
+   Nu e configurabil: e o constantă de mecanism, nu un reglaj care se află
+   prin folosire. */
+const RECICLARE=1.2;
+
+/* ── Urechea, pe firul audio ─────────────────────────────────────────
+   `requestAnimationFrame` se oprește COMPLET cât fereastra e ascunsă, iar
+   starea AȘTEPT stă mai tot timpul cu JA.S.Mine în spate. Un AudioWorklet
+   rulează pe firul audio, chemat de placa de sunet, nu de compozitorul de
+   ferestre: nu-l interesează dacă fereastra se vede.
+
+   Ce face aici: DOAR ceasul și pragurile. Nu înregistrează, nu trimite, nu
+   decide. Anunță ce s-a întâmplat — s-a auzit, s-a închis o frază, reciclează,
+   închide-te — iar firul principal face restul.
+
+   Pasul se ia din `sampleRate`, nu din 1/60: firul audio n-are cadre, are
+   eșantioane.
+
+   `pauza` / `reia`: cât se transcrie sau cât pleacă fraza, tăcerea nu mai
+   numără nimic — dar zgomotul tot se adună, altfel vorbirea rostită peste
+   transcriere n-ar mai fi vorbire și tamponul ei s-ar recicla.
+
+   `maxim` e plafonul din AȘTEPT: un cuvânt de trezire e un cuvânt. O
+   conversație de douăzeci de secunde nu e „engage", iar transcrierea ei ar
+   ajunge în jurnalul probelor fără să fi fost vreodată pentru JA.S.Mine. Peste
+   plafon, rostirea se taie AICI și nu pleacă nicăieri. În ENGAGE plafonul e 0,
+   adică stins: acolo vorbești cât ai de vorbit.
+
+   Se încarcă dintr-un Blob, nu dintr-un fișier: serverul nu servește fișiere
+   statice, iar puntea e o singură pagină. */
+const URECHE_WORKLET=`
+class Ureche extends AudioWorkletProcessor {
+  constructor(opt){
+    super();
+    this.maxim=0;
+    this.praguri((opt && opt.processorOptions) || {});
+    this.vorbit=false; this.taiat=false;
+    this.tTacere=0; this.tCurat=0; this.vorbitSec=0; this.tNivel=0;
+    this.tDeschisa=0;
+    this.pauzat=false; this.oprit=false;
+    this.port.onmessage=e=>{
+      const m=e.data;
+      if(m==='stop')this.oprit=true;
+      else if(m==='pauza')this.pauzat=true;
+      else if(m==='reia')this.pauzat=false;
+      else if(m && m.praguri)this.praguri(m.praguri);
+    };
+  }
+
+  praguri(r){
+    if(r.prag_volum!=null)this.pragVolum=r.prag_volum;
+    if(r.secunde_minim_vorbire!=null)this.minimVorbire=r.secunde_minim_vorbire;
+    if(r.prag_tacere!=null)this.pragTacere=r.prag_tacere;
+    if(r.reciclare!=null)this.reciclare=r.reciclare;
+    if(r.maxim!=null)this.maxim=r.maxim;
+  }
+
+  // Nivelul se trimite rar: firul principal îl vrea doar ca să deseneze, iar un
+  // mesaj la fiecare 128 de eșantioane ar fi 375 pe secundă pentru un număr.
+  raporteaza(nivel,dt){
+    this.tNivel+=dt;
+    if(this.tNivel<0.05)return;
+    this.tNivel=0;
+    this.port.postMessage({tip:'nivel', v:nivel,
+      strang:this.vorbit ? Math.min(1,this.tTacere/this.pragTacere) : 0});
+  }
+
+  process(intrari){
+    if(this.oprit)return false;
+    const c=intrari[0] && intrari[0][0];
+    if(!c)return true;
+
+    let s=0;
+    for(let i=0;i<c.length;i++)s+=c[i]*c[i];
+    const nivel=Math.sqrt(s/c.length);
+    const dt=c.length/sampleRate;
+    this.raporteaza(nivel,dt);
+
+    /* NU SE PUNE AICI UN PLAFON PE TIMP SCURS. Când nivelul stă în jurul
+       pragului, tăcerea nu ajunge niciodată la pragTacere, ceasul curge, iar
+       tăierea cade în mijlocul cuvântului („TAN GEITU.", „And read.").
+
+       Firul audio nu poate ști cât e de lung tamponul — nu el înregistrează.
+       Limita stă în firul principal, care ține reportofonul: acolo se
+       hotărăște CE SE TRIMITE, nu unde se taie vorbirea.
+
+       ATENȚIE la scris: blocul ăsta trăiește într-un template literal. Un accent
+       grav pus aici încheie șirul și rupe TOT scriptul punții — ecran negru. */
+
+    // Vechimea rostirii curge indiferent de zgomot: exact asta lipsea.
+    if(this.vorbit)this.tDeschisa+=dt;
+
+    if(nivel>this.pragVolum){
+      this.tTacere=0;
+      // Vorbirea continuă după plafon. Tamponul se aruncă mai departe, la
+      // fiecare RECICLARE: fără asta, o oră de conversație în cameră ar crește
+      // în memorie ca să fie aruncată la sfârșit.
+      if(this.taiat){
+        this.tCurat+=dt;
+        if(this.tCurat>=this.reciclare){
+          this.tCurat=0;
+          this.port.postMessage({tip:'recicleaza'});
+        }
+        return true;
+      }
+      this.tCurat=0;
+      // Un bloc peste prag nu e o frază: o ușă, o tastă, un oftat trec pragul.
+      // Se cere durată cumulată, altfel se trimite zgomot la Whisper și el
+      // răspunde cu ce a învățat, nu cu ce s-a auzit.
+      this.vorbitSec+=dt;
+      if(this.maxim && this.vorbitSec>=this.maxim){
+        this.taiat=true; this.vorbit=false; this.tCurat=0; this.tDeschisa=0;
+        this.port.postMessage({tip:'prea-lung', secunde:this.vorbitSec});
+        return true;
+      }
+      if(this.vorbitSec>=this.minimVorbire && !this.vorbit){
+        this.vorbit=true; this.tDeschisa=0;
+        this.port.postMessage({tip:'inceput'});
+      }
+      return true;
+    }
+
+    if(this.pauzat)return true;
+
+    // După o rostire tăiată de plafon nu se închide nimic până nu se lasă
+    // liniște: altfel coada frazei ar pleca singură ca rostire nouă.
+    if(this.taiat){
+      this.tTacere+=dt;
+      if(this.tTacere>=this.pragTacere){
+        this.taiat=false;
+        this.tTacere=0; this.vorbitSec=0; this.tCurat=0; this.tDeschisa=0;
+        this.port.postMessage({tip:'recicleaza'});
+      }
+      return true;
+    }
+
+    if(this.vorbit){
+      this.tTacere+=dt;
+      /* Rostirea se închide fie când s-a lăsat tăcere destulă, fie când e
+         DESCHISĂ DE PREA MULT TIMP — dar închiderea pe vechime se face numai
+         AICI, în ramura de liniște, unde nu poate tăia nimeni în mijlocul unui
+         cuvânt.
+
+         Fără ea, tastatura ține rostirea deschisă: un clic la fiecare jumătate
+         de secundă repune ceasul tăcerii, dar adaugă doar o zecime ceasului
+         vorbirii, deci tamponul adună zeci de secunde, cu „engage" în ele. Pusă
+         în ramura de zgomot, ar reteza cuvântul în două: diferența e LOCUL. */
+      if(this.tTacere>=this.pragTacere ||
+         (this.maxim && this.tDeschisa>=this.maxim+this.pragTacere+1)){
+        // Durata VORBITĂ pleacă odată cu rostirea, fiindcă rândul de mai jos o
+        // șterge. Firul principal n-are de unde s-o afle altfel: el vede
+        // tamponul întreg, cu tăcerile în el, nu cât s-a stat peste prag.
+        const vorbitSec=this.vorbitSec;
+        this.vorbit=false;
+        this.tTacere=0; this.vorbitSec=0; this.tCurat=0; this.tDeschisa=0;
+        this.port.postMessage({tip:'sfarsit', vorbit:vorbitSec});
+      }
+      return true;
+    }
+
+    this.tCurat+=dt;
+    // Zgomotul scurt care n-a ajuns frază se uită: altfel s-ar aduna peste
+    // fraza următoare și ar face-o să pară că a început mai devreme.
+    if(this.tCurat>1)this.vorbitSec=0;
+    if(this.tCurat>=this.reciclare){
+      this.tCurat=0;
+      this.port.postMessage({tip:'recicleaza'});
+    }
+    return true;
+  }
+}
+registerProcessor('ureche', Ureche);
+`;
+
+/* Un reportofon și vectorul în care scrie, legate la creare.
+   Vectorul NU e global: stop() mai emite un `dataavailable` final, cu coada
+   înregistrării care se închide. Cu un vector comun, bucata aia ar ateriza
+   prima în blob-ul frazei URMĂTOARE — un fragment fără antet EBML, pe care
+   decodorul îl refuză cu InvalidDataError, la fiecare frază după prima. */
+function reportofon(){
+  const bucati=[];
+  const rec=new MediaRecorder(U.flux);
+  // Clipa nașterii. Singurul loc din program care știe cât audio s-a adunat
+  // într-un tampon — firul audio n-are de unde ști, nu el înregistrează.
+  const t0=Date.now();
+  rec.ondataavailable=e=>{if(e.data&&e.data.size)bucati.push(e.data);};
+  // 250 ms: bucăți mici, ca fraza să fie completă în memorie în clipa în care
+  // se lasă tăcerea. Whisper primește tot ce s-a adunat, nu bucăți separate —
+  // are nevoie de fraza întreagă ca să nimerească anglicismele.
+  rec.start(250);
+  return {rec,bucati,t0};
+}
+
+/* Starea motorului de conversație, citită de trei locuri: eticheta lui COMMAND,
+   eticheta AGOREI și culoarea amândurora. `null` = încă n-a răspuns nicio sondă;
+   nu se presupune nici „viu", nici „mort", ca la RECON. */
+const MOTOR={viu:null,cum:null};
+/* De ce NU ascultă urechea, ținut într-un singur loc: de el atârnă și CULOAREA,
+   nu doar textul — cât e scris aici, COMMAND e rece. Un nod rece trebuie să-și
+   spună motivul, deci mesajul nu se șterge singur după câteva secunde. */
+let URECHE_MOTIV='';
+function urecheaTace(motiv){URECHE_MOTIV=motiv;tagCmd(motiv);}
+
+/* Eticheta lui COMMAND are DOI scriitori care se pot suprapune la pornire:
+   dictarea și motorul. De-asta implicitul nu e un literal, ci se alege din
+   starea AMÂNDURORA — același tipar ca `ureche()`: starea se schimbă într-un
+   loc, nu în cinci. Cu `tagCmd('')`, sonda motorului își reface eticheta fără
+   să știe nimic despre dictare, și invers.
+
+   Culoarea trece tot pe aici, din același motiv: `tagCmd` e deja locul prin
+   care trec TOATE schimbările — sonda motorului, `ureche()`, și fiecare ramură
+   în care urechea renunță. */
+function tagCmd(s){
+  refaCmd();
+  NODES.cmd.tag=s||etichetaCmd()||'postul de comandă';
+}
+/* Portocaliul lui COMMAND înseamnă „poți vorbi cu ea", deci ține de AMÂNDOUĂ:
+   motorul răspunde ȘI urechea e armată.
+
+   Se poate atârna o culoare de armarea urechii fiindcă în spatele semnalului nu
+   e nicio gaură: între `gata`+`trezire` (ce vede puntea) și prima transcriere
+   reușită trec 0,38–0,40 s, iar textul e corect din prima.
+
+   AGORA rămâne pe motorul singur: „Socrate nu primește ureche". */
+function refaCmd(){
+  const poate=!!(MOTOR.viu&&U.pornita);
+  NODES.cmd.on=poate?1:0;
+  NODES.cmd.hue=poate?'lamp':'ice';
+}
+function etichetaCmd(){
+  // Motorul se numește primul: el e cel care poate fi oprit de tot, deci cel
+  // care se repară. Urechea, la pornire, vine singură.
+  const m=etichetaMotor();
+  if(m)return m;
+  // Motorul răspunde, dar urechea nu. Nodul e rece și pentru asta, deci
+  // eticheta trebuie să spună care din două lipsește.
+  if(!U.pornita)return URECHE_MOTIV||'urechea pornește';
+  // „aștept" e implicitul, nu un text scris de `ureche()`. Altfel cei doi
+  // scriitori se bat: la pornire rece, cu urechea armată înaintea motorului,
+  // eticheta ar clipi între „motorul pornește" și „aștept" peste un nod rece.
+  // Așa, ordinea e una singură: motorul, urechea, apoi starea urechii.
+  return U.mod==='astept'?'aștept':'';
+}
+/* Numai despre motor — AGORA îl folosește neatins, fiindcă ea n-are ureche. */
+function etichetaMotor(){
+  if(MOTOR.viu)return '';
+  // „nu răspunde" nu se spune despre un motor care a răspuns cu eroare: nu se
+  // repară pornind ce e deja pornit.
+  if(MOTOR.cum==='eroare')return 'motorul răspunde cu eroare';
+  if(MOTOR.cum==='oprit')return 'motorul e oprit';
+  // Și cât nicio sondă n-a răspuns (`null`): eticheta merge cu culoarea, iar
+  // nodul e desenat rece de la construcție. Un nod rece lângă „postul de
+  // comandă" ar fi spus două lucruri diferite despre aceeași clipă.
+  return 'motorul pornește';
+}
+
+/* Starea și pauza urechii se schimbă ÎMPREUNĂ, aici, nu în cinci locuri: pauza
+   e un mesaj către firul audio, și trebuie trimis oriunde s-ar schimba starea.
+   Legat de `ureche()`, nu poate rămâne în urmă. */
+function ureche(s){
+  U.stare=s;
+  // Pauza e NUMAI pentru ENGAGE. Acolo are rost: ce spui peste transcrierea
+  // frazei anterioare aparține frazei tale, deci n-are voie să se taie în două.
+  //
+  // În AȘTEPT e exact pe dos: cât ține pauza (2–7 s pe mașină încărcată),
+  // reportofonul nu se reciclează, rostirile se lipesc una de alta, iar
+  // cuvântul se îneacă în ele („This is a good age."). Probele sunt
+  // independente: fiecare rostire e o întrebare de sine stătătoare.
+  const ocupat=(U.mod==='engage'&&(s==='transcriu'||s==='trimit'));
+  try{if(U.nod)U.nod.port.postMessage(ocupat?'pauza':'reia');}catch(e){}
+  // În AȘTEPT eticheta nu se mișcă. Starea de dedesubt se schimbă la fel — o
+  // probă chiar se transcrie — dar „transcriu…" ar clipi sub COMMAND la fiecare
+  // vorbă spusă în cameră, ca și cum JA.S.Mine ar lucra pentru tine când de fapt
+  // doar verifică dacă a fost chemată.
+  if(U.mod==='astept'){tagCmd('');return;}
+  tagCmd({ascult:'ascult', vorbesti:'te aud',
+          transcriu:'transcriu…', trimit:'trimit…'}[s]||'');
+}
+
+// „Înapoi la ascultare" înseamnă altceva în fiecare stare, și e chemat din
+// cinci locuri. Scris o dată.
+function revinoLaAscultare(){
+  ureche(U.mod==='engage'?'ascult':'astept');
+}
+
+function opresteUrechea(motiv){
+  if(!U.pornita)return;
+  U.pornita=false;U.stare='';
+  if(U.razg){clearTimeout(U.razg);U.razg=null;}
+  // Cererea în zbor nu se anulează, dar rezultatul ei se aruncă: cerere++ face
+  // ca răspunsul vechi să nu se mai potrivească.
+  U.cerere++;
+  try{if(U.r&&U.r.rec.state!=='inactive')U.r.rec.stop();}catch(e){}
+  // Worklet-ul se oprește singur la mesajul ăsta (`process` întoarce false).
+  // Închiderea contextului l-ar opri oricum, dar un fir audio care se stinge
+  // fiindcă i s-a spus e altceva decât unul care se stinge fiindcă i s-a luat
+  // pământul de sub picioare.
+  try{if(U.nod){U.nod.port.postMessage('stop');U.nod.disconnect();}}catch(e){}
+  // Oprirea pistelor stinge indicatorul de microfon din sistem. Fără ea, rămâne
+  // aprins deși nimeni nu mai ascultă.
+  try{if(U.flux)U.flux.getTracks().forEach(p=>p.stop());}catch(e){}
+  try{if(U.ac)U.ac.close();}catch(e){}
+  U.r=null;U.flux=null;U.ac=null;U.nod=null;U.nivel=0;U.strang=0;U.mod='';
+  U.probaInZbor=false;U.probaLaRand=null;
+  NODES.cmd.strang=0;NODES.cmd.burst=0;
+  urecheaTace(motiv==='refuzat'?'microfon refuzat':'');
+}
+
+function reglaje(){
+  return U.reglaje||U_IMPLICIT;
+}
+
+/* Pragurile se schimbă cu starea, pe aceeași ușă prin care au intrat prima
+   dată. Două numere diferă:
+
+   `prag_tacere` — cât taci ca rostirea să se închidă. În AȘTEPT e scurt (un
+   cuvânt e un cuvânt); în ENGAGE e cel din dictare.json, unde o pauză de gândit
+   n-are voie să taie fraza.
+
+   `maxim` — plafonul peste care rostirea se aruncă fără să fie transcrisă. În
+   ENGAGE e 0, adică stins. */
+function aplicaPraguri(){
+  if(!U.nod)return;
+  U.nod.port.postMessage({praguri:praguri()});
+}
+
+/* Cele patru numere care diferă între stări. Scrise o dată, folosite și la
+   crearea nodului, și la fiecare schimbare de stare — două liste care ar fi
+   putut să se despartă în tăcere. */
+function praguri(){
+  const R=reglaje(),T=R.trezire;
+  if(U.mod==='engage'||!T)return{
+    prag_tacere:R.prag_tacere_secunde, maxim:0,
+    prag_volum:R.prag_volum, secunde_minim_vorbire:R.secunde_minim_vorbire};
+  // În AȘTEPT pragurile sunt mai JOASE: de la doi metri, vocea abia trece de
+  // pragul dictării, iar înregistrarea pornește prea târziu — „engage" spus și
+  // neauzit. O probă goală costă 0,02–0,06 s; un cuvânt neauzit costă o tură de
+  // vorbit degeaba.
+  return{
+    prag_tacere:T.trezire_prag_tacere, maxim:T.trezire_maxim_secunde,
+    prag_volum:T.trezire_prag_volum, secunde_minim_vorbire:T.trezire_minim_vorbire};
+}
+
+// Reportofonul vechi mai emite o bucată finală după stop(). Ea aterizează în
+// vectorul LUI, fiindcă reportofon() face unul nou la fiecare chemare — vezi
+// comentariul de acolo.
+function reiaReportofonul(){
+  try{if(U.r)U.r.rec.stop();}catch(e){}
+  U.r=U.pornita?reportofon():null;
+}
+
+async function pornesteUrechea(mod){
+  if(U.pornita)return true;
+  U.mod=mod||'astept';
+  // Reglajele se cer la fiecare pornire, nu o dată la încărcarea paginii:
+  // pragul se schimbă în fișier și trebuie să se simtă la următoarea dictare,
+  // fără reîncărcarea punții.
+  try{
+    const d=await (await fetch('/api/dictare')).json();
+    if(d&&d.ok){
+      U.reglaje=d;
+      // „se încarcă" nu e „nu e pornită": prima trece singură, a doua se repară.
+      if(!d.gata){urecheaTace(d.se_incarca?'dictarea se încarcă…':'dictarea nu e pornită');
+        return false;}
+    }
+  }catch(e){ /* merge pe implicite; nu e motiv să nu asculți */ }
+
+  try{
+    U.flux=await navigator.mediaDevices.getUserMedia({audio:{
+      echoCancellation:true,noiseSuppression:true,autoGainControl:true}});
+  }catch(e){
+    // Refuz sau lipsă de microfon. localhost e context securizat, deci nu e
+    // nevoie de HTTPS — dacă puntea s-ar muta pe altă adresă, aici ar muri.
+    //
+    // urecheaTace direct, NU opresteUrechea('refuzat'): urechea încă nu e
+    // pornită, iar opresteUrechea iese pe loc când `U.pornita` e fals — refuzul
+    // s-ar vedea doar în consolă, adică nicăieri, într-o fereastră fără bară.
+    urecheaTace('microfon refuzat');
+    return false;
+  }
+
+  try{
+    U.ac=new (window.AudioContext||window.webkitAudioContext)();
+    // Politica de autoplay a Chrome pornește contextul „suspended" când n-a fost
+    // un gest al omului — iar AȘTEPT pornește la încărcarea paginii, unde nu e
+    // niciun gest. Chrome îl lasă să pornească fiindcă originea are permisiune
+    // de microfon (scrisă în profil de pregateste-chrome.py), dar asta e o
+    // politică, nu o lege: dacă nu pornește, se agață de primul gest care vine.
+    if(U.ac.state==='suspended')await U.ac.resume().catch(()=>{});
+    if(U.ac.state!=='running')asteaptaUnGest();
+    const url=URL.createObjectURL(
+      new Blob([URECHE_WORKLET],{type:'text/javascript'}));
+    await U.ac.audioWorklet.addModule(url);
+    URL.revokeObjectURL(url);
+    U.nod=new AudioWorkletNode(U.ac,'ureche',
+      {processorOptions:Object.assign({reciclare:RECICLARE},praguri())});
+    U.nod.port.onmessage=e=>ascultaUrechea(e.data);
+    U.ac.createMediaStreamSource(U.flux).connect(U.nod);
+    // Nodul TREBUIE legat mai departe, către destinație, altfel graful audio îl
+    // consideră mort și `process()` nu mai e chemat NICIODATĂ. Se leagă printr-un
+    // câștig pe zero: nu se aude nimic, dar urechea trăiește. Fără asta tace, și
+    // tace fără să se plângă.
+    const mut=U.ac.createGain();mut.gain.value=0;
+    U.nod.connect(mut).connect(U.ac.destination);
+  }catch(e){
+    // Un worklet care nu se încarcă lasă microfonul aprins și urechea moartă —
+    // exact starea care nu se vede. Se strânge tot și se scrie pe ecran.
+    console.error('dictare: urechea nu a pornit',e);
+    try{if(U.flux)U.flux.getTracks().forEach(p=>p.stop());}catch(ex){}
+    try{if(U.ac)U.ac.close();}catch(ex){}
+    U.flux=null;U.ac=null;U.nod=null;U.mod='';
+    urecheaTace('urechea nu a pornit');
+    return false;
+  }
+
+  U.pornita=true;U.nivel=0;U.strang=0;
+  // Singurul loc care ȘTERGE motivul: de aici încolo urechea chiar ascultă,
+  // iar `revinoLaAscultare` trece prin `tagCmd`, deci aprinde și nodul.
+  URECHE_MOTIV='';
+  U.r=reportofon();
+  revinoLaAscultare();
+  return true;
+}
+
+// Un context audio suspendat arată exact ca unul care merge: nicio eroare,
+// numai liniște. Se agață de primul gest, o singură dată.
+function asteaptaUnGest(){
+  const trezeste=()=>{
+    if(U.ac)U.ac.resume().catch(()=>{});
+    removeEventListener('keydown',trezeste,true);
+    removeEventListener('click',trezeste,true);
+  };
+  addEventListener('keydown',trezeste,true);
+  addEventListener('click',trezeste,true);
+}
+
+/* Ce vine de pe firul audio. Aici nu se numără nimic — se hotărăște.
+   Nivelul și strângerea sunt puse deoparte pentru desen; frame() le citește la
+   cadru, ca înainte, doar că sursa lor nu mai moare cu fereastra. */
+function ascultaUrechea(m){
+  if(!U.pornita||!m)return;
+  if(m.tip==='nivel'){U.nivel=m.v;U.strang=m.strang;return;}
+  if(m.tip==='inceput'){
+    if(U.stare==='ascult'||U.stare==='vorbesti')ureche('vorbesti');
+    return;
+  }
+  if(m.tip==='sfarsit'){
+    // Durata vorbită contează doar în ENGAGE, unde hotărăște dacă rostirea are
+    // voie să plece la Sky. În AȘTEPT filtrul e chiar cuvântul de trezire.
+    if(U.mod==='engage')inchideFraza(m.vorbit); else inchideRostirea();
+    return;
+  }
+  if(m.tip==='prea-lung'){
+    // Rostirea a trecut de plafon. Se aruncă AICI: nu se transcrie, nu pleacă
+    // nicăieri, nu costă nimic. Se scrie doar în jurnal, ca peste o săptămână
+    // să se știe de câtă vorbire din cameră ne-a apărat plafonul.
+    jurnalTrezire('prea_lung','',{durata_audio:Math.round(m.secunde*10)/10});
+    reiaReportofonul();
+    return;
+  }
+  if(m.tip==='recicleaza')reiaReportofonul();
+}
+
+/* ── Cele două cuvinte ───────────────────────────────────────────────
+   Textul se caută NORMALIZAT și PE BUCĂȚI, nu comparat întreg: Whisper scrie
+   „Engage.", „Then, engage.", „and the age." pentru același cuvânt spus
+   românește. O comparație pe text întreg le-ar respinge pe aproape toate. */
+function normalizeaza(s){
+  return (s||'').toLowerCase().normalize('NFD').replace(/\p{M}/gu,'')
+    .replace(/[^a-z0-9]+/g,' ').trim();
+}
+
+/* Distanța de editare, plafonată: nu ne interesează cât de departe e un cuvânt,
+   doar dacă e mai aproape decât atât. Iese devreme pe cuvinte de lungimi prea
+   diferite, ca să nu plimbe matricea degeaba. */
+function distanta(a,b,plafon){
+  if(Math.abs(a.length-b.length)>plafon)return plafon+1;
+  let prec=Array.from({length:b.length+1},(_,j)=>j);
+  for(let i=1;i<=a.length;i++){
+    const cur=[i];let minRand=i;
+    for(let j=1;j<=b.length;j++){
+      const cost=a[i-1]===b[j-1]?0:1;
+      cur[j]=Math.min(prec[j]+1,cur[j-1]+1,prec[j-1]+cost);
+      if(cur[j]<minRand)minRand=cur[j];
+    }
+    if(minRand>plafon)return plafon+1;
+    prec=cur;
+  }
+  return prec[b.length];
+}
+
+/* Cuvintele de adormire, una singură pentru amândouă ușile. Serverul le trimite
+   gata ca listă și INDEPENDENT de `trezire`: ușa tastată n-are nevoie nici de
+   ureche, nici de iGPU. */
+function cuvinteAdormire(){
+  const v=reglaje().cuvinte_adormire;
+  return Array.isArray(v)?v.map(normalizeaza).filter(Boolean):[];
+}
+
+/* UN mecanism, două canale, două praguri — aceeași regulă care ține „engage" și
+   Alt+A să nu se poarte diferit. Pragurile:
+
+   VORBIT, cuvânt LUNG (≥ CUVANT_LUNG litere; toleranța urcă la 2 de la 8):
+   se caută cu toleranță, dar numai la CAPĂTUL rostirii. „disengage" e străin și
+   lung, Whisper îl sparge („Disangage.", „dis angage"), dar nimic din română nu
+   se apropie de el din greșeală. NU „oriunde în frază": cuvântul folosit la
+   mijloc ca să vorbești DESPRE el ar înghiți fraza întreagă. Comanda se pune la
+   sfârșit, vorba despre ea nu.
+
+   VORBIT, cuvânt SCURT: exact, ca ULTIM cuvânt al unei rostiri de cel mult
+   FEREASTRA_CUVINTE. Fără toleranță: „stop" are patru litere și e cuvânt
+   românesc obișnuit — cu toleranța de mai sus l-ar prinde „stoc" și „top".
+   Ultim cuvânt, nu rostirea întreagă: Whisper pune umplutură ÎNAINTEA lui
+   („Ok, stop."). Plafonul de cuvinte separă comanda (1–2 cuvinte) de vorba
+   DESPRE cuvânt (o frază lungă); costul lui e o comandă spusă într-o frază
+   lungă, adică un apel plătit — partea ieftină a asimetriei.
+
+   TASTAT: orice cuvânt, doar ca MESAJ ÎNTREG. Tastat nu există nici zgomot, nici
+   umplutură — omul scrie exact ce vrea, deci „ce înseamnă disengage?" ajunge la
+   Sky ca orice întrebare. */
+/* Cele două praguri servesc AMBELE direcții, adormirea și trezirea: un cuvânt
+   scurt e scurt la fel în orice direcție, iar dacă pragurile s-ar despărți,
+   „stop" și „start" ar ajunge să se poarte diferit fără ca cineva să fi decis
+   asta.
+
+   `CUVANT_LUNG` (6) spune „e străin, deci se caută larg"; „e destul de lung ca
+   să suporte două greșeli" e alt prag (8), scris acolo unde se calculează
+   plafonul. „engage" are ȘASE litere — cu 8 ar cădea pe ramura scurtă și n-ar
+   mai fi găsit în „Engage, engage, engage…".
+
+   Lungimea e o unealtă aproximativă pentru „cuvânt pe care româna vorbită nu-l
+   scoate din greșeală": „start" (5) și „stop" (4) sunt românești, „engage" (6)
+   și „disengage" (9) nu. Aproximarea greșește ieftin: regula strictă e cea
+   sigură, deci un cuvânt nou și scurt intră apărat. Unul lung se măsoară pe
+   `date\trezire.jsonl` înainte să fie adăugat. */
+const CUVANT_LUNG=6, FEREASTRA_CUVINTE=4;
+/* Trezirea: o literă greșită, nici două. Argumentul și cifrele stau la
+   `cautaCuvantul`, unde se și folosește. */
+const TREZIRE_TOLERANTA=1;
+
+/* Canalul TASTAT: mesajul întreg, exact. Nici zgomot, nici umplutură — omul
+   scrie exact ce vrea. */
+function esteAdormire(text){
+  const n=normalizeaza(text);
+  return !!n&&cuvinteAdormire().some(c=>n===c);
+}
+
+/* Canalul VORBIT: taie cuvântul de adormire de la CAPĂTUL rostirii și întoarce
+   ce a rămas înaintea lui.
+
+   Întoarce `rest`, nu doar „da/nu", fiindcă restul e ce ai spus și trebuie să
+   ajungă la Sky: „notează X, disengage" n-are voie să piardă X. Ce NU pleacă e
+   cuvântul însuși: nu plătești un apel ca să spui „lasă-mă în pace".
+
+   Cuvintele se caută cu indicele lor în textul ORIGINAL, nu se taie textul în
+   bucăți pe spații: „Dis-uncage." e UN cuvânt despărțit de spații, dar DOUĂ
+   după normalizare, iar tăiat pe spații ar ieși „dis uncage" — fără potrivire.
+   Cu indicele, `rest` se ia din original, feliat exact acolo unde începe
+   comanda, cu diacritice și punctuație intacte. */
+const ADORMIRE_MIN_REST=2;
+function taieAdormirea(text){
+  const s=text||'';
+  const bucati=[];                       // {n: cuvântul normalizat, i: unde începe}
+  const re=/[\p{L}\p{N}]+/gu;
+  let m;
+  while((m=re.exec(s))!==null){
+    const w=normalizeaza(m[0]);
+    if(w)bucati.push({n:w,i:m.index});
+  }
+  const nimic={gasit:false,rest:s};
+  if(!bucati.length)return nimic;
+  const U1=bucati[bucati.length-1], U2=bucati.length>1?bucati[bucati.length-2]:null;
+  /* `rest` se dă doar de la două cuvinte în sus. Sub atât nu e vorbă, e
+     umplutură („Ok, stop.", „Ok, disengage."): un „Ok," trimis la Sky ar fi un
+     apel plătit ca să nu spui nimic. */
+  const taie=b=>{
+    const r=s.slice(0,b.i).trim();
+    return {gasit:true,
+            rest:r.split(/\s+/).filter(Boolean).length>=ADORMIRE_MIN_REST?r:''};
+  };
+  for(const c of cuvinteAdormire()){
+    if(c.length>=CUVANT_LUNG){
+      const plafon=c.length>=8?2:1;
+      if(distanta(U1.n,c,plafon)<=plafon)return taie(U1);
+      // Whisper despică uneori cuvântul străin în două („dis angage"), și
+      // atunci niciuna din bucăți nu mai seamănă cu întregul — lipite, da.
+      if(U2&&distanta(U2.n+U1.n,c,plafon)<=plafon)return taie(U2);
+    }else if(bucati.length<=FEREASTRA_CUVINTE&&U1.n===c){
+      return taie(U1);
+    }
+  }
+  return nimic;
+}
+
+/* Cuvintele care bagă în ENGAGE, normalizate. Vin de la server gata ca listă
+   (`cuvinte_trezire` din `server.py`), ca și cele de adormire — puntea n-are de
+   ghicit dacă pe disc e un șir sau o listă. */
+function cuvinteTrezire(){
+  const T=reglaje().trezire;
+  const v=T&&T.cuvant_trezire;
+  return (Array.isArray(v)?v:[v]).map(normalizeaza).filter(Boolean);
+}
+
+function cautaCuvantul(text){
+  const T=reglaje().trezire;
+  if(!T)return null;
+  const n=normalizeaza(text);
+  const cuv=n.split(' ').filter(Boolean);
+  // „disengage" se caută ÎNAINTEA lui „engage", fiindcă îl conține literal.
+  // În ordinea inversă, „disengage" ar porni Sky în loc să-l oprească — un
+  // defect care ar părea capriciu, nu greșeală.
+  if(taieAdormirea(text).gasit)return 'adormire';
+  // TREZIREA ARE DOUĂ UȘI: „engage" și „start". A doua e o cheie la aceeași
+  // cameră, nu un al treilea cuvânt de ținut minte — exact ce e „stop" pentru
+  // „disengage". Cele două chei nu se caută la fel, fiindcă nu seamănă: una e
+  // lungă și străină, cealaltă scurtă și românească. Regula se alege pe
+  // lungime, cu aceleași două praguri care țin adormirea.
+  //
+  // CUVÂNT LUNG (≥ CUVANT_LUNG litere) — oriunde în rostire, cu toleranță 1.
+  //
+  // AMÂNDOUĂ direcțiile au toleranță, dar nu aceeași — asimetria costurilor
+  // rămâne întreagă. O adormire ratată costă un apel plătit și un chat care nu
+  // se închide; o trezire falsă costă mai mult, fiindcă JA.S.Mine sare peste ce
+  // lucrezi. De-asta adormirea urcă la 2 pe cuvinte lungi, iar trezirea stă la
+  // 1 și nu se mișcă de acolo. Măsurat pe jurnalul probelor, `date\trezire.jsonl`
+  // (1.961 rostiri aruncate, 94 treziri):
+  //
+  //   distanța 1 → 3 treziri RATATE („encage", „engege", „engege"), 0 străine
+  //   distanța 2 → aceleași 3, plus 3 FALSE („ben gage", „langage", „inage")
+  //   distanța 3 → plus 21 de false, printre care „name", „enough", „atrage"
+  //
+  // Se caută PE CUVÂNT ÎNTREG, niciodată pe cuvinte lipite. Adormirea își
+  // permite lipirea („dis angage"), trezirea nu: „ben gage" lipit dă „bengage",
+  // la distanță 1 — adică exact una din trezirile false de mai sus. Cifra și
+  // mecanismul trebuie să spună același lucru.
+  //
+  // CUVÂNT SCURT — exact, la CAPĂTUL unei rostiri de cel mult
+  // FEREASTRA_CUVINTE. Fără toleranță și fără „oriunde": „start" e cuvânt
+  // românesc obișnuit. Măsurat pe 1.970 de rostiri `aruncat`:
+  //
+  //   exact, la capăt, în ≤4 cuvinte → 0 treziri false
+  //   exact, oriunde                 → 2 (fraze obișnuite care conțin „start")
+  //   ca subșir (regula celui lung)  → 3 (plus un „restartat")
+  //
+  // O trezire venită prin toleranță se recunoaște în jurnal fără câmp nou:
+  // e un rând `trezit` al cărui text nu conține cuvântul scris exact.
+  for(const tinta of cuvinteTrezire()){
+    if(tinta.length>=CUVANT_LUNG){
+      if(n.indexOf(tinta)>=0)return 'trezire';
+      // Numai pentru un cuvânt de trezire dintr-o bucată: pe unul cu spații,
+      // „cuvântul cel mai apropiat" n-ar mai însemna nimic.
+      if(tinta.indexOf(' ')<0&&cuv.some(
+           w=>distanta(w,tinta,TREZIRE_TOLERANTA)<=TREZIRE_TOLERANTA))
+        return 'trezire';
+    // Capătul se caută pe TEXTUL normalizat, nu pe ultimul cuvânt: așa merge
+    // și un cuvânt scurt din două bucăți, fără o a doua ramură care să-l
+    // trateze separat.
+    }else if(cuv.length<=FEREASTRA_CUVINTE&&(n===tinta||n.endsWith(' '+tinta))){
+      return 'trezire';
+    }
+  }
+  return null;
+}
+
+/* O rostire auzită în AȘTEPT. Drum separat de `inchideFraza()`, dinadins:
+
+   1. NU se schimbă starea, deci firul audio nu intră în pauză și reciclarea
+      merge mai departe. Rostirile rămân scurte și curate.
+   2. NU se folosește `U.cerere`. Acolo, o cerere nouă o invalidează pe cea
+      veche — corect pentru o frază care se scrie într-un câmp, greșit aici:
+      dacă spui „engage" și imediat după se aude altceva, răspunsul care conține
+      cuvântul ar fi aruncat tocmai fiindcă a venit al doilea. Fiecare probă e o
+      întrebare de sine stătătoare și primește răspuns de sine stătător. */
+/* Cât poate fi de VECHI un tampon care mai are voie să plece la transcriere.
+
+   Un cuvânt de trezire e un cuvânt, iar 7 secunde e o cifră care a funcționat.
+   **Se coboară sau se ridică pe folosire, nu pe raționament.**
+
+   Limita e AICI, la trimitere, nu pe firul audio. Pusă acolo, ar tăia vorbirea
+   în mijloc și ar ciunti chiar cuvântul. Aici nu poate rupe nimic — rostirea se
+   închide când se închide, iar dacă tamponul a ieșit prea lung se aruncă
+   întreg. Mai bine o rostire pierdută decât una ciuntită: una se repetă,
+   cealaltă pare că unealta n-aude. */
+const TAMPON_MAXIM_MS=7000;
+
+function inchideRostirea(){
+  const vechi=U.r;U.r=null;
+  if(!vechi){reiaReportofonul();return;}
+  const gata=()=>{
+    if(U.pornita&&!U.r)U.r=reportofon();
+    const varsta=Date.now()-vechi.t0;
+    if(varsta>TAMPON_MAXIM_MS){
+      jurnalTrezire('prea_lung','',{durata_audio:Math.round(varsta/100)/10});
+      return;
+    }
+    trimiteProba(vechi.bucati);
+  };
+  try{vechi.rec.onstop=gata;vechi.rec.stop();}catch(e){gata();}
+}
+
+/* CEL MULT O PROBĂ ÎN ZBOR, plus un singur loc de așteptare.
+
+   Tăierea rostirilor merge mai departe neîntrerupt, dar TRIMITEREA se așază la
+   rând: motorul face o inferență o dată. Apărarea e prima din două — conducta
+   OpenVINO are propriul zăvor pe server. Cea de aici scutește drumul, cea de
+   acolo apără obiectul.
+
+   Locul de așteptare ține rostirea CEA MAI NOUĂ, nu prima: dacă spui „engage"
+   cât se lucrează la un zgomot de dinainte, cuvântul tău e cel care trebuie să
+   ajungă. Ce se pierde se scrie în jurnal ca `aglomerat`, ca să se știe cât de
+   des se întâmplă. */
+function trimiteProba(bucati){
+  if(!bucati||!bucati.length)return;
+  if(U.probaInZbor){
+    if(U.probaLaRand)jurnalTrezire('aglomerat','',null);
+    U.probaLaRand=bucati;
+    return;
+  }
+  U.probaInZbor=true;
+  trimiteCatreWhisper(bucati).then(d=>{
+    U.probaInZbor=false;
+    // Între timp s-a putut intra în ENGAGE, sau urechea s-a putut opri.
+    if(U.pornita&&U.mod==='astept')cerceteazaProba(d);
+    const laRand=U.probaLaRand;U.probaLaRand=null;
+    if(laRand&&U.pornita&&U.mod==='astept')trimiteProba(laRand);
+  });
+}
+
+/* O probă a venit pe rezervă. Se întreabă serverul dacă iGPU-ul mai trăiește
+   — `/api/dictare` întoarce `trezire: null` exact atunci, fiindcă trezirea are
+   voie să meargă doar cu el viu. O cerere, într-un caz rar.
+
+   Dacă e viu, segmentul a fost doar lung: se cercetează textul ca oricare altul.
+   Cuvântul poate fi acolo, și n-are de ce să se piardă. */
+function verificaAcceleratorul(d){
+  fetch('/api/dictare').then(r=>r.json()).then(x=>{
+    if(x&&x.ok&&x.gata&&x.trezire){
+      U.reglaje=x;
+      cerceteazaTextul(d);
+      return;
+    }
+    console.warn('trezire: iGPU-ul a cazut, opresc AȘTEPT');
+    // Urmarea își păstrează numele vechi: rândurile din jurnal îl poartă, iar
+    // o etichetă redenumită ar rupe numărătoarea în două fără să câștige nimic.
+    jurnalTrezire('accelerator-mort',(d.text||'').trim(),d);
+    opresteUrechea('');
+    urecheaTace('trezirea s-a oprit · Alt+A');
+    // Se REÎNCEARCĂ peste un minut, nu se rămâne mort până la reîncărcarea
+    // paginii. Cazul obișnuit nu e un iGPU crăpat, e un server repornit.
+    // `armeazaTrezirea` verifică singură dacă e ceva de pornit.
+    setTimeout(()=>{if(!U.pornita)armeazaTrezirea();},60000);
+  }).catch(()=>cerceteazaTextul(d));
+}
+
+function cerceteazaProba(d){
+  // „A venit de la faster-whisper" NU înseamnă că iGPU-ul a murit. Serverul
+  // poate cădea pe rezervă și dintr-un motiv trecător, și spune singur care:
+  // câmpul `motiv` din răspuns. Fără deosebire, un „Engage." auzit și transcris
+  // corect ar fi aruncat, iar urechea oprită. **O apărare care nu deosebește
+  // cauzele apără de cazul greșit.**
+  if(d&&d.ok&&d.motor&&d.motor!=='openvino-igpu'){
+    verificaAcceleratorul(d);
+    return;
+  }
+  cerceteazaTextul(d);
+}
+
+function cerceteazaTextul(d){
+  // Eticheta se rescrie la fiecare probă, nu doar la intrarea în stare: e
+  // singurul semn de pe ecran că JA.S.Mine ascultă. Un semn care se stinge
+  // singur e mai rău decât niciunul: te uiți la el și te liniștești.
+  if(U.mod==='astept')ureche('astept');
+  const text=(d&&d.ok&&d.text||'').trim();
+  const cuvant=cautaCuvantul(text);
+  // O probă goală costă cât una adevărată, ~0,25 s: OpenVINO n-are VAD.
+  //
+  // **Ce trebuie urmărit prin folosire:** fără VAD, Whisper pe aproape-tăcere
+  // nu poate spune „n-am auzit nimic" — prezice text. Poarta rămâne pragul de
+  // volum și minimul de vorbire, care taie ÎNAINTE de trimitere; dacă apar
+  // rânduri `aruncat` cu text inventat, aici se caută.
+  // `bucla` în loc de `aruncat` când textul e ciclu: proba se aruncă la fel, se
+  // schimbă doar ce SCRIE în jurnal, ca buclele să se poată număra separat.
+  jurnalTrezire(!text?'gol':(cuvant==='trezire'?'trezit':(eBucla(text)?'bucla':'aruncat')),text,d);
+  if(cuvant==='trezire')intraInEngage();
+}
+
+/* BUCLA. Fără VAD, Whisper pe aproape-tăcere nu poate spune „n-am auzit
+   nimic" — prezice text, și de multe ori intră în ciclu, uneori chiar lista de
+   hotwords („SENSORS, AGORA, MCP, COMMS, COMMS…"). Pe jurnal, ~7% din rostirile
+   cu text.
+
+   Pragul — cel puțin 12 cuvinte ȘI cel mult o treime unice — e cel care, trecut
+   peste jurnalul întreg, prinde exact buclele. Cea mai scurtă prinsă are 12
+   cuvinte; cea mai lungă rostire adevărată nescăpată are 60, din care 49 unice.
+
+   DE CE STĂ AICI, ȘI NU ÎN SERVER: unele bucle poartă chiar un cuvânt de
+   comandă („Engage: engage, engage…" a trezit corect). Un filtru pus în
+   /api/transcrie ar goli textul înainte ca cineva să caute cuvântul în el,
+   adică ar omorî o trezire ca să prevină o cheltuială. De-asta bucla se
+   verifică DUPĂ adormire și DUPĂ trezire, ultima dintre toate. */
+function eBucla(text){
+  const c=(text||'').trim().split(/\s+/).filter(Boolean);
+  if(c.length<12)return false;
+  const unice=new Set(c.map(x=>x.replace(/[.,!?…"'\-—:;()]/g,'').toLowerCase()));
+  return unice.size*3<=c.length;
+}
+
+/* Jurnalul probelor. Nu se vede nicăieri pe ecran, deliberat: rata alarmelor
+   false nu se află din încă zece minute de citit cu voce tare, ci din câte ori
+   s-a trezit JA.S.Mine într-o săptămână de folosire. Singura care poate număra asta
+   e chiar ea. Eșecul se înghite — o măsurătoare n-are voie să oprească urechea. */
+function jurnalTrezire(urmare,text,d){
+  try{
+    fetch('/api/trezire',{method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({urmare,text:text||'',
+        audio:(d&&d.durata_audio)||0, lucru:(d&&d.durata_transcriere)||0,
+        motor:(d&&d.motor)||null,
+        // Pleacă MOTIVUL căderii pe rezervă, când există — altfel „a mers
+        // încet" n-ar avea unde să se explice.
+        motiv:(d&&d.motiv)||null})}).catch(()=>{});
+  }catch(e){}
+}
+
+/* ── AȘTEPT ⇄ ENGAGE ─────────────────────────────────────────────────
+   Aceeași ureche, același reportofon, același drum către /api/transcrie.
+   Diferă doar ce se face cu textul care iese, și două praguri. Asta e ce ține
+   mecanismul mic — și ce face ca „engage" și Alt+A să nu poată ajunge să se
+   poarte diferit. */
+/* Fiecare intrare și ieșire din ENGAGE se scrie în jurnal, cu MOTIVUL.
+   O stare care se schimbă fără să lase urmă e o stare pe care n-o poți repara
+   decât din noroc: fără motiv, un `trezit` urmat imediat de o ieșire nu spune
+   ce a desfăcut intrarea. */
+function intraInAstept(motiv){
+  if(U.mod==='engage'){
+    jurnalTrezire('iesit-engage',motiv||'nespus',null);
+    // Camera ÎNCHISĂ înseamnă conversație încheiată. Ieșirea din ENGAGE e
+    // singura ușă afară, deci un singur rând acoperă „disengage", „stop", `×`
+    // și Escape — n-ai ce ține minte în plus.
+    incheieFirul('sky');
+  }
+  if(!U.pornita){U.mod='';return;}
+  U.mod='astept';
+  if(U.razg){clearTimeout(U.razg);U.razg=null;}
+  // O transcriere în zbor n-are unde ateriza după ce am ieșit din ENGAGE:
+  // cerere++ face ca răspunsul ei să nu se mai potrivească.
+  U.cerere++;
+  aplicaPraguri();
+  reiaReportofonul();
+  U.strang=0;NODES.cmd.strang=0;NODES.cmd.burst=0;
+  ureche('astept');
+}
+
+async function intraInEngage(){
+  if(U.mod==='engage')return;
+  // Muntele se închide ÎNTÂI, și fără să rearmeze urechea: o pornește
+  // `pornesteUrechea('engage')` de mai jos, o singură dată. Trebuie aici, nu în
+  // `openPanel`, fiindcă panoul se schimbă abia pe rândul următor — iar dacă
+  // eram deja în COMMAND, `openPanel` nici nu se cheamă.
+  opresteMuntele(false);
+  // Întâi fereastra, apoi panoul: dacă JA.S.Mine e în bară, „engage" trebuie să
+  // aducă în față ce deschide, altfel a trezit ceva ce nu vede nimeni.
+  ridicaPuntea();
+  if(selected!=='cmd')openPanel('cmd');
+  if(!U.pornita&&!await pornesteUrechea('engage'))return;
+  // Starea se schimbă ACUM, nu după ce se desenează panoul: cine spune cuvântul
+  // începe să vorbească pe loc, iar fraza spusă imediat după „engage" ar nimeri
+  // încă în AȘTEPT și ar fi aruncată. Așteptarea câmpului stă unde e adevărata
+  // dependență: în pune().
+  U.mod='engage';
+  aplicaPraguri();
+  reiaReportofonul();
+  ureche('ascult');
+  jurnalTrezire('intrat-engage','panou='+selected,null);
+}
+
+// Fără „devansare" (transcrierea pornită la 0,35 s de liniște, în paralel cu
+// pragul): se declanșa la fiecare virgulă, iar contenția pe CPU costa mai mult
+// decât câștiga (4,51 s singură, 12,76 s cu trei concurente). Nu o reintroduce
+// fără să măsori latența totală, nu doar momentul plecării cererii.
+function inchideFraza(vorbit){
+  // ureche('transcriu') trimite și „pauza" pe firul audio: acolo se opresc
+  // ceasurile care erau odată aici (tăcerea, vorbirea).
+  ureche('transcriu');
+  NODES.cmd.strang=0;U.strang=0;
+  const nr=++U.cerere;
+  const vechi=U.r;U.r=null;
+  if(!vechi){revinoLaAscultare();return;}
+  const gata=()=>{
+    if(U.pornita&&!U.r)U.r=reportofon();
+    trimiteCatreWhisper(vechi.bucati).then(d=>primeste(d,nr,vorbit));
+  };
+  try{vechi.rec.onstop=gata;vechi.rec.stop();}catch(e){gata();}
+  plasa(nr);
+}
+
+function plasa(nr){
+  // Plasă de ultimă instanță pentru o stare blocată, NU un termen pentru
+  // transcriere: 30 s nu se atinge decât dacă cererea nu se încheie niciodată —
+  // singurul caz care nu e acoperit de .then/.catch.
+  setTimeout(()=>{
+    if(U.pornita&&U.stare==='transcriu'&&nr===U.cerere){
+      console.warn('dictare: transcrierea nu s-a incheiat, revin la ascult');
+      revinoLaAscultare();
+      if(!U.r)U.r=reportofon();
+    }
+  },30000);
+}
+
+function trimiteCatreWhisper(bucati){
+  if(!bucati||!bucati.length)return Promise.resolve(null);
+  const fd=new FormData();
+  fd.append('audio',new Blob(bucati,{type:'audio/webm'}),'frază.webm');
+  return fetch('/api/transcrie',{method:'POST',body:fd})
+    .then(r=>r.status===200?r.json():{ok:false,eroare:'cerere respinsă ('+r.status+')'})
+    .catch(()=>null);
+}
+
+function primeste(d,nr,vorbit){
+  // Urechea s-a închis între timp, sau a plecat altă frază. Rezultatul
+  // ăsta n-are unde ateriza.
+  if(!U.pornita||nr!==U.cerere)return;
+  const text=(d&&d.ok&&d.text||'').trim();
+
+  // Probele din AȘTEPT nu trec pe aici — au drumul lor, `inchideRostirea()`.
+  // Dacă am ajuns aici în AȘTEPT, e o frază rămasă din ENGAGE, prinsă de
+  // schimbarea de stare: se uită.
+  if(U.mod!=='engage')return;
+
+  // În ENGAGE, cuvântul de adormire se verifică ÎNAINTE de orice. Ce se taie e
+  // CUVÂNTUL, nu rostirea: ce ai spus înaintea lui pleacă la Sky, fiindcă e
+  // vorba ta. Nu pleacă doar comanda — altfel ultimul lucru pe care i l-ai
+  // spune lui Sky ar fi chiar ordinul de a nu-l mai deranja, plătit.
+  const A=taieAdormirea(text);
+  if(A.gasit){
+    jurnalTrezire('adormit',text,d);
+    // Trimiterea ÎNTÂI, ieșirea după: `closePanel` stinge URECHE, iar fără ea
+    // n-ar mai avea cine să scrie în câmp. Camera se închide oricum imediat —
+    // cererea rămasă în zbor își vede de drum și își scrie firul pe disc.
+    if(A.rest)pune(A.rest,0,true);
+    if(selected==='cmd'||manualDeschis)closePanel('disengage'); else intraInAstept('disengage');
+    return;
+  }
+  /* A DOUA TREAPTĂ A PORȚII, și numai în ENGAGE. Poarta de la intrare e jos
+     (0,15 s) ca „stop" — o silabă — să se poată naște. Dar în ENGAGE ce se naște
+     pleacă la Sky, adică se plătește, iar la 0,15 s două apăsări de tastă în
+     aceeași secundă cumulează destul cât să treacă.
+
+     Așa că filtrul stă pe CE S-A SPUS, nu pe durată: rostirea scurtă se
+     transcrie (local, gratis), dar merge mai departe doar dacă e cuvânt-comandă
+     — iar adormirea s-a verificat deja, mai sus. Restul se scrie în jurnal
+     (`scurt`) și se uită. Se pierd la fel „da." și „mersi" spuse intenționat,
+     dar lasă urmă. */
+  const P=reglaje().secunde_incredere_vorbire;
+  if(vorbit!=null && P && vorbit<P){
+    jurnalTrezire('scurt',text,d);
+    ureche('ascult');
+    return;
+  }
+  /* A TREIA TREAPTĂ: bucla. Ultima dintre toate, dinadins — adormirea și
+     trezirea s-au căutat deja, iar o buclă care poartă cuvântul-comandă a
+     apucat să-și facă treaba. Ce cade aici e doar ce ar fi plecat la Sky:
+     apeluri plătite pe text pe care nu l-a spus nimeni („Stop! Stop! Stop!…").
+
+     Se scrie în jurnal, ca `scurt`: ce nu pleacă mai departe lasă urmă. */
+  if(eBucla(text)){
+    jurnalTrezire('bucla',text,d);
+    ureche('ascult');
+    return;
+  }
+  // Ce se dictează în ENGAGE se scrie în jurnal, ca și ce se aude în AȘTEPT:
+  // fără text, durată și motor, „transcrie aiurea ce vorbesc" n-ar avea nimic
+  // măsurat în spate. Textul gol intră tot ca `dictat`, cu text vid: „n-a
+  // transcris nimic" e unul dintre felurile de a transcrie aiurea.
+  jurnalTrezire('dictat',text,d);
+  if(!text){ureche('ascult');return;}
+  pune(text);
+}
+
+/* `acum` sare peste răzgândire. Se folosește la adormire: răgazul există ca să
+   te poți răzgândi cât mai vorbești, iar tu tocmai ai spus cuvântul care încheie.
+   Fără el, cu răzgândirea pe altceva decât zero, mesajul ar aștepta un câmp pe
+   care închiderea camerei tocmai l-a stins — și s-ar pierde în tăcere. */
+function pune(text,incercare,acum){
+  // Câmpul poate să nu existe încă: „engage" deschide panoul, iar panoul se
+  // leagă la 320 ms. Textul AȘTEAPTĂ câmpul, nu se aruncă. Două secunde de
+  // răbdare, apoi înapoi în AȘTEPT.
+  if(!URECHE||!URECHE.viu()){
+    if((incercare|0)<20){setTimeout(()=>pune(text,(incercare|0)+1,acum),100);return;}
+    intraInAstept('campul nu a aparut in 2 s');return;
+  }
+  const R=reglaje();
+  // Textul aterizează în câmp, vizibil. Nu ești obligat să-l citești, dar dacă
+  // e stâlcit îl vezi cu coada ochiului și Escape îl oprește — rămâne în câmp,
+  // corectabil, trimis cu Enter. Nu se pierde nimic.
+  URECHE.camp.value=(URECHE.camp.value?URECHE.camp.value+' ':'')+text;
+  ureche('trimit');
+  // Cu răzgândirea pe 0, până și setTimeout(...,0) mai pierde un cadru. La zero
+  // nu e nimic de așteptat, deci se trimite pe loc.
+  const ms=acum?0:Math.max(0,R.secunde_razgandire*1000);
+  if(!ms){ureche('ascult');
+          try{URECHE.trimite();}catch(ex){console.error('dictare:',ex);}
+          return;}
+  U.razg=setTimeout(()=>{
+    U.razg=null;
+    if(!U.pornita||!URECHE||!URECHE.viu())return;
+    // Urechea revine la ascultare ÎNAINTE de trimitere, și oricum.
+    // Invers, o excepție în trimite() ar lăsa starea blocată pe „trimit",
+    // adică firul audio rămas în „pauza": microfonul aprins, urechea care nu
+    // mai închide nicio frază, fără niciun semn în afară de tag-ul care nu se
+    // mai schimbă.
+    ureche('ascult');
+    try{URECHE.trimite();}
+    catch(ex){console.error('dictare: trimiterea a esuat',ex);}
+  },Math.max(0,R.secunde_razgandire*1000));
+}
+
+function anuleazaTrimiterea(){
+  if(!U.razg)return false;
+  clearTimeout(U.razg);U.razg=null;
+  ureche('ascult');
+  return true;
+}
+
+/* ── Escape trimite JA.S.Mine în bară ────────────────────────────────
+   Puntea rulează în Chrome `--kiosk --app=`: fără bară de titlu, fără buton.
+   Escape e singurul drum afară din fereastră. */
+/* JA.S.Mine se MINIMIZEAZĂ, nu se închide: omul lucrează altceva între timp și
+   o scoate din bară când are nevoie de ea.
+
+   O apăsare, nu două. Minimizarea nu pierde nimic — un click în bară o aduce
+   înapoi, iar urechea nici măcar nu se oprește. O confirmare pentru un gest
+   care se desface cu un click e o treaptă simțită zilnic, fără să apere nimic.
+
+   Nu există `window.minimize()`. O pagină nu poate umbla la fereastra care o
+   ține, deci cere serverului. */
+function minimizeazaPuntea(){
+  tagCmd('în bară…');
+  fetch('/api/minimizeaza-puntea',{method:'POST'})
+    .then(r=>r.json())
+    // `ferestre: 0` înseamnă că filtrul n-a găsit fereastra — nu că a mers.
+    .then(d=>{tagCmd(d&&d.ok?'':'nu am putut minimiza');})
+    .catch(()=>tagCmd('nu am putut minimiza'));
+}
+
+/* Urechea nu se oprește cu fereastra — firul audio n-are treabă cu ce se vede.
+   Deci „engage" poate veni cât JA.S.Mine e în bară, și ar deschide chatul într-o
+   fereastră pe care n-o vede nimeni. Se cere ridicarea mereu, iar SERVERUL
+   hotărăște: ridică numai o fereastră aflată în bară — o unealtă n-are voie să
+   sară peste ce face omul. Pagina nu ține minte dacă e minimizată: o stare
+   ținută în două locuri se desincronizează.
+   Nu se așteaptă răspunsul: panoul se deschide oricum. */
+function ridicaPuntea(){
+  try{fetch('/api/ridica-puntea',{method:'POST'}).catch(()=>{});}catch(e){}
+}
+
+/* Închiderea, de la singurul buton de pe hartă. `window.close()` MERGE într-o
+   fereastră `--app`, iar serverul e rezerva, la 400 ms, pentru cazul în care
+   ar fi refuzat. Se stinge TOT: fereastra, motorul și serverul. */
+function inchideJasmine(){
+  tagCmd('închid…');
+  /* Ieșirea se cere ÎNAINTE de window.close(), nu în ruta de rezervă de mai
+     jos: window.close() MERGE, deci `/api/inchide-puntea` nu se cheamă aproape
+     niciodată, iar oprirea pusă acolo n-ar pleca decât în cazul rar.
+     `keepalive` e ce ține cererea în viață după ce pagina dispare; fără el,
+     Chrome o taie exact în momentul pentru care există. Nu se așteaptă
+     răspunsul: ieșirea omului nu depinde de motor.
+     Serverul nu moare odată cu cererea asta: se stinge singur, după ce vede
+     fereastra plecată — altfel rezerva de mai jos ar rămâne fără ușă. */
+  try{fetch('/api/iesire',{method:'POST',keepalive:true}).catch(()=>{});}catch(e){}
+  try{window.close();}catch(e){}
+  setTimeout(()=>{
+    console.warn('inchidere: window.close() refuzat, cer serverului');
+    fetch('/api/inchide-puntea',{method:'POST'})
+      .then(r=>r.json())
+      // `oprite: 0` înseamnă că filtrul n-a găsit fereastra — nu că a mers.
+      .then(d=>{if(!d||!d.ok||!d.oprite)tagCmd('nu am putut închide');})
+      .catch(()=>tagCmd('nu am putut închide'));
+  },400);
+}
+document.getElementById('inchide').onclick=inchideJasmine;
+
+/* Escape are trei înțelesuri lipite unul peste altul, iar ele nu se pot alege
+   decât după CE E DESCHIS — deci scara stă într-un singur ascultător, nu în
+   trei împrăștiate prin fișier:
+
+     1. trimitere în răzgândire → se anulează, textul rămâne în câmp
+     2. panou deschis          → se închide, iar urechea coboară în AȘTEPT
+     3. nimic deschis          → JA.S.Mine se duce în bară
+
+   Ordinea nu e alfabetică: panoul se verifică ÎNAINTE de minimizare, altfel un
+   Escape dat ca să scapi de panou ar trimite toată fereastra în bară. */
+addEventListener('keydown',e=>{
+  if(e.altKey&&!e.ctrlKey&&!e.shiftKey&&(e.key==='a'||e.key==='A'||e.code==='KeyA')){
+    e.preventDefault();
+    // Alt+A face exact ce fac cele două cuvinte, prin aceleași funcții. Rămâne
+    // ca ușă de rezervă: când cuvântul nu se aude, sau când iGPU-ul e mort și
+    // AȘTEPT nici nu poate porni.
+    if(U.mod==='engage'){
+      if(selected==='cmd'||manualDeschis)closePanel('alt+a'); else intraInAstept('alt+a');
+      return;
+    }
+    intraInEngage();
+    return;
+  }
+  if(e.key!=='Escape')return;
+  if(anuleazaTrimiterea())return;
+  if(deschis()){closePanel('escape');return;}
+  minimizeazaPuntea();
+},true);
+
+// Orice tastă apăsată în timpul răzgândirii oprește trimiterea: dacă ai pus
+// mâna pe tastatură, vrei să corectezi, nu să plece.
+addEventListener('keydown',e=>{
+  if(U.razg&&e.key!=='Escape'&&!e.altKey)anuleazaTrimiterea();
+});
+
+const sheet=document.getElementById('sheet');
+let lastFocus=null;
+// Clasa se pune și la redimensionare, nu doar la deschidere: fereastra
+// browserului se trage cu mouse-ul în timp ce panoul e deschis.
+function potrivesteSheet(){sheet.classList.toggle('ingust',!larg());}
+addEventListener('resize',potrivesteSheet);
+/* Umplerea ferestrei e aceeași pentru un panou și pentru un manual — diferă
+   doar ce se întâmplă cu harta în spatele ei. Scrisă o dată. */
+function arataInSheet(p){
+  // Clipul se oprește ÎNAINTE de orice altceva. Aici se acoperă trecerea la alt
+  // panou sau la un manual — `closePanel` nu e chemat pe drumul ăsta, iar un
+  // `<video>` scos din pagină cu `innerHTML` continuă să cânte în Chrome.
+  // Chemată și când se deschide chiar MUNTELE: atunci oprește ce cânta și
+  // `wire()` pornește de la primul clip, cum s-a cerut.
+  opresteMuntele();
+  document.getElementById('sh-n').textContent=p.n;
+  document.getElementById('sh-s').textContent=p.s;
+  document.getElementById('sh-c').innerHTML=p.html();
+  // Fereastra mare o cere panoul, nu o impune sheet-ul: RECON și LOG rămân
+  // înguste. `toggle` cu al doilea argument acoperă și trecerea directă de la
+  // un panou mare la unul mic (butoanele de accesibilitate pot face asta).
+  sheet.classList.toggle('mare',!!p.mare);
+  // Ecranul plin e cerut tot de panou, ca `mare`. Un singur panou îl cere azi.
+  sheet.classList.toggle('plin',!!p.plin);
+  potrivesteSheet();
+  sheet.classList.add('open');
+  if(p.wire)setTimeout(()=>p.wire(),320);
+}
+function openPanel(k){
+  const p=P[k];if(!p)return;
+  lastFocus=document.activeElement;
+  manualDeschis=null;
+  selected=k;NODES[k].burst=1;
+  arataInSheet(p);
+}
+/* Manualul folosește aceeași fereastră, dar NU selectează niciun nod: un text
+   despre o cameră n-are de ce să tragă camera în mijlocul hărții. */
+function openManual(k){
+  if(!MANUALE[k])return;
+  lastFocus=document.activeElement;
+  selected=null;manualDeschis=k;
+  // Chatul a ieșit din pagină, deci dictarea n-are unde scrie — exact cazul de
+  // la închiderea unui panou. Și, ca acolo, camera închisă înseamnă conversație
+  // încheiată; motivul se scrie în jurnal, ca orice ieșire din ENGAGE.
+  URECHE=null;
+  if(U.mod==='engage')intraInAstept('manual deschis');
+  arataInSheet(faManual(k));
+}
+function closePanel(motiv){
+  // Escape, `×`, clicul pe hartă. Camera închisă înseamnă tăcere — aceeași
+  // formă cu firul care se încheie la ieșirea din ENGAGE. Aici se rearmează și
+  // urechea, dacă muntele o tăcuse.
+  opresteMuntele();
+  selected=null;manualDeschis=null;
+  // Panoul închis înseamnă că elementele au ieșit din pagină: dictarea nu mai
+  // are unde scrie. Se coboară o treaptă, în AȘTEPT — microfonul rămâne deschis
+  // cât e JA.S.Mine deschisă, ca „engage" să aibă cine să-l audă.
+  URECHE=null;
+  if(U.mod==='engage')intraInAstept(motiv||'panou inchis');
+  sheet.classList.remove('open');
+  // .mare se scoate DUPĂ ce fereastra s-a stins. Scoasă acum, s-ar vedea cum
+  // se micșorează în timp ce dispare.
+  setTimeout(()=>{if(!deschis())sheet.classList.remove('mare','plin');},800);
+  if(lastFocus)lastFocus.focus();
+}
+/* `isTrusted` deosebește un click DE OM de unul făcut din cod, iar motivul de
+   ieșire din ENGAGE se scrie diferit pentru cele două. Panoul închis „de
+   butonul lui" fără ca omul să atingă mouse-ul are nevoie de cifra asta, nu de
+   ghicit. */
+document.getElementById('closeBtn').onclick=e=>{
+  jurnalTrezire('inchis-cu-butonul',
+    (e&&e.isTrusted?'click de om':'click din cod')+
+    ' · x='+(e&&e.clientX)+' y='+(e&&e.clientY)+' · detail='+(e&&e.detail),null);
+  closePanel('butonul panoului');
+};
+// Minipanoul de sub cursor, sau null. Aceeași geometrie ca la desen — de-aia e
+// scrisă într-un singur loc.
+function miniLa(x,y){
+  for(const m of MINI){
+    const g=geomMini(m);
+    if(y<g.y||y>g.y+g.h)continue;
+    // Zona apăsabilă se taie în perete la înălțimea cursorului, nu pe o cutie:
+    // altfel colțul care lipsește din formă ar rămâne apăsabil.
+    const w=g.marg(y);
+    if(g.s<0?(x>=MINI_MARJA&&x<=MINI_MARJA+w):(x<=W-MINI_MARJA&&x>=W-MINI_MARJA-w))return m;
+  }
+  return null;
+}
+cv.addEventListener('click',e=>{
+  const x=e.clientX,y=e.clientY;
+  // Cu fereastra deschisă, clicul din afara ei o închide — inclusiv dacă a
+  // nimerit un minipanou. Regula veche, neatinsă: un click pe hartă cu ceva pe
+  // ecran înseamnă „scapă-mă de asta", nu „dă-mi altceva".
+  if(deschis()){
+    const r=sheet.getBoundingClientRect();
+    if(x<r.left||x>r.right||y<r.top||y>r.bottom)closePanel('click in afara');
+    return;
+  }
+  const m=miniLa(x,y);
+  if(m){openManual(m.k);return;}
+  let hit=null,hd=1e9;
+  for(const k in NODES){
+    const n=NODES[k];
+    const d=Math.hypot(x-n.px,y-n.py);
+    if(d<n.cr*1.4&&d<hd){hd=d;hit=k;}
+  }
+  if(hit)openPanel(hit);
+});
+cv.addEventListener('mousemove',e=>{
+  if(deschis()){cv.style.cursor='default';hover=null;hoverMini=null;return;}
+  hover=null;
+  hoverMini=miniLa(e.clientX,e.clientY);
+  if(!hoverMini)for(const k in NODES){
+    if(Math.hypot(e.clientX-NODES[k].px,e.clientY-NODES[k].py)<NODES[k].cr*1.4){hover=k;break;}
+  }
+  cv.style.cursor=(hover||hoverMini)?'pointer':'default';
+},{passive:true});
+document.querySelectorAll('.a11y button[data-k]').forEach(b=>b.onclick=()=>openPanel(b.dataset.k));
+document.querySelectorAll('.a11y button[data-m]').forEach(b=>b.onclick=()=>openManual(b.dataset.m));
+/* Contorul se calculează, nu se scrie. Numitorul: câte panouri există în P.
+   Numărătorul: câte au wire() — funcția prin care un panou vorbește cu serverul.
+   Un panou fără wire() e o pagină de text, oricât de convingător ar suna.
+
+   Nodul aprins din hartă și sistemul activ sunt lucruri diferite: nodul spune
+   că locul există (COMMAND e puntea de comandă și rămâne aprins), wire() spune
+   că sistemul face ceva. De-asta contorul nu se mai uită la NODES.on. */
+const sistemeMoarte=new Set();
+/* Unele panouri au wire(), dar wire-ul cheamă ceva din afară, care poate fi oprit
+   — RECON cheamă agentul 051. Sondele își scriu verdictul aici. Mulțimea pornește
+   goală: nici „viu", nici „mort" nu se presupun de mână.
+
+   Cât o sondă n-a răspuns încă niciodată, contorul afișează „—", nu o cifră.
+   O cifră care se corectează singură după o clipă e o afirmație nesusținută,
+   exact ce am scos de pe ecran. Sondele se înscriu singure când pornesc, deci
+   nu există nicăieri o listă a lor scrisă de mână. */
+const sondePornite=new Set(),sondeRaspunse=new Set();
+function refaContor(){
+  const cnt=document.getElementById('cnt');
+  // Doar primul răspuns contează: la repetarea din minut în minut valoarea e
+  // deja știută, deci contorul nu mai clipește pe „—" la fiecare sondaj.
+  if(sondeRaspunse.size<sondePornite.size){cnt.textContent='—';return;}
+  const chei=Object.keys(P);
+  const active=chei.filter(k=>typeof P[k].wire==='function'&&!sistemeMoarte.has(k)).length;
+  cnt.textContent=active+'/'+chei.length;
+}
+refaContor();
+/* ── Harta nu minte despre agent ─────────────────────────────────────
+   UN SINGUR SCRIITOR pentru nodul RECON: aprinderea, culoarea, eticheta,
+   conducta și contorul. Doi scriitori ajung să dea aceeași stare cu două
+   etichete, iar unul uită conducta.
+
+   Sursa e sonda din `/api/stare` (`sondeaza_agent_051`), cu o unealtă
+   adevărată: întrebată o dată la încărcare, apoi la 60 s. Panoul RECON scrie
+   tot pe aici când află ceva.
+
+   Stările se repară în locuri diferite, deci se spun diferit:
+     lucrează  — o rulare e în curs; agentul nu răspunde la nimic altceva
+     activ     — a răspuns
+     ocupat    — n-a răspuns la timp, dar portul acceptă conexiuni; „ocupat"
+                 și „blocat" nu se deosebesc din afară
+     eroare    — a răspuns cu eșec: NU se repară pornindu-l
+     stins     — portul e închis */
+// Capătul poate fi oricare din cele două: ordinea din LINKS o dictează curbura,
+// nu apartenența. Căutat doar pe l[0], sonda ar rata legătura scrisă invers.
+const legRecon=LINKS.find(l=>l[0]==='recon'||l[1]==='recon');
+function arataAgentul(a){
+  const n=NODES.recon;
+  // Cât rulează lanțul, agentul nu răspunde la sondă — dar e viu și muncește.
+  const lucreaza=!!(a.lucreaza||RECON_STARE.pornit);
+  const viu=lucreaza||!!a.viu;
+  const esueaza=!lucreaza&&viu&&!!a.raspunde_dar_esueaza;
+  n.on=viu?1:0;
+  n.hue=viu?'lamp':'ice';
+  n.tag=lucreaza?'agent · lucrează':!viu?'agent · stins'
+    :esueaza?'agent · răspunde cu eroare':a.ocupat?'agent · ocupat sau blocat':'agent · activ';
+  if(legRecon)legRecon[2]=viu?1:0;
+  // Contorul numără sistemele care fac ce trebuie: un agent care răspunde cu
+  // eroare e viu pe hartă, dar nu e activ.
+  if(viu&&!esueaza)sistemeMoarte.delete('recon');else sistemeMoarte.add('recon');
+  refaContor();
+}
+function sondaAgent(){
+  sondePornite.add('recon');
+  fetch('/api/stare').then(r=>r.json())
+    .then(d=>arataAgentul((d&&d.servere&&d.servere.agent_051)||{viu:false}))
+    .catch(()=>arataAgentul({viu:false}))
+    .finally(()=>{sondeRaspunse.add('recon');refaContor();});
+}
+sondaAgent();
+setInterval(sondaAgent,60000);
+
+/* ── Harta nu minte despre motorul de conversație ────────────────────
+   Între clipa în care serverul răspunde și clipa în care Sky poate răspunde trec
+   ~9–12 s. O spune CULOAREA, nu un mesaj de eroare de după: rece cât motorul
+   pornește, portocaliu când poate răspunde.
+
+   Culoarea poate atârna de sonda asta fiindcă sonda (`GET /health`),
+   `/api/models` și primul mesaj reușit se aprind în ACEEAȘI probă de 0,6 s:
+   nu există interval în care sonda e verde și Sky tace.
+
+   Pentru COMMAND, „poate răspunde" nu e destul — mai trebuie și să audă:
+   culoarea lui se face în `refaCmd()`. Aici rămân AGORA și MUNTELE. */
+function seteazaMotor(viu,cum){
+  MOTOR.viu=viu;MOTOR.cum=cum||null;
+  // AGORA și MUNTELE se aprind de aici, amândouă. COMMAND cere și urechea, iar
+  // culoarea lui se reface în `tagCmd`.
+  //
+  // MUNTELE e în aceeași categorie cu AGORA: și Ramana vorbește prin Open WebUI,
+  // și la el se SCRIE. Cât e camera deschisă urechea tace anume; un nod care
+  // s-ar răci fiindcă el însuși a oprit urechea ar fi o hartă care se contrazice.
+  for(const k of ['agora','munte']){
+    NODES[k].on=viu?1:0;
+    NODES[k].hue=viu?'lamp':'ice';
+  }
+  // Fiecare își spune numele stratului când merge; COMMAND trece prin `tagCmd`,
+  // ca dictarea și motorul să nu se bată pe același câmp.
+  NODES.agora.tag=viu?'Socrate':etichetaMotor();
+  NODES.munte.tag=viu?'Ramana':etichetaMotor();
+  tagCmd('');
+}
+/* Ritmul are două trepte, ca pauzele paznicului de sincronizare: cât e rece se
+   întreabă la 2 secunde — cifra e `TREZIRE_PAUZA`, aceeași fereastră de pornire
+   — iar după ce s-a aprins, la 60 de secunde, ca sonda RECON. A doua treaptă nu
+   e decor: dacă Docker moare în timpul zilei, harta o spune fără să fie
+   întrebată, exact ca la agent.
+
+   `/api/motor`, nu `/api/stare`: al doilea sondează și agentul 051 cu un apel
+   MCP adevărat, iar ăla se întreabă o dată la încărcare, nu de zece ori la
+   fiecare pornire. */
+const MOTOR_RECE=2000, MOTOR_CALD=60000;
+let motorCeas=null;
+function sondaMotor(){
+  fetch('/api/motor').then(r=>r.json())
+    .then(d=>{const m=(d&&d.motor)||{};seteazaMotor(!!m.viu,m.cum);})
+    .catch(()=>seteazaMotor(false,MOTOR.cum))
+    .finally(()=>{
+      // Ceasul se reașează după FIECARE răspuns, nu la interval fix: altfel
+      // trecerea de la 2 s la 60 s ar cere două `setInterval` care se suprapun.
+      clearTimeout(motorCeas);
+      motorCeas=setTimeout(sondaMotor,MOTOR.viu?MOTOR_CALD:MOTOR_RECE);
+    });
+}
+sondaMotor();
+// Tabelul de straturi se cere o dată, la încărcare. Panourile de chat nu se pot
+// desena fără el; dacă nu vine, ele o spun, iar wire() mai încearcă o dată.
+cereStraturi();
+frame();
+
+/* JA.S.Mine începe ascultând. Deschizi fereastra și microfonul e deja deschis, în
+   AȘTEPT — nu e nimic de apăsat ca să poți spune „engage".
+
+   Fără reîncercare, urechea ar rata fereastra de pornire și ar rămâne stinsă
+   până la reîncărcarea paginii — un eșec pe care nimic nu l-ar arăta, într-o
+   fereastră fără bară.
+
+   Serverul răspunde din prima secundă, iar modelul se încarcă în fundal:
+   `se_incarca` vine de la server și spune singur cât mai e de așteptat.
+   Plafonul rămâne numai pentru cazul în care nu răspunde nimeni, fiindcă acolo
+   chiar n-avem niciun semnal. */
+const TREZIRE_REINCERCARI=20, TREZIRE_PAUZA=2000;
+async function armeazaTrezirea(n){
+  n=n||1;
+  if(U.pornita)return;
+  let d=null;
+  try{d=await (await fetch('/api/dictare')).json();}catch(e){}
+
+  // Reglajele se rețin chiar dacă urechea nu pornește: cuvintele de adormire
+  // sunt acolo, iar ușa TASTATĂ merge și fără ureche, și fără iGPU.
+  if(d&&d.ok)U.reglaje=d;
+
+  if(d&&d.ok&&d.gata&&d.trezire){pornesteUrechea('astept');return;}
+
+  // Dictarea merge, dar trezirea nu e de făcut: ori lipsesc cuvintele din
+  // dictare.json, ori iGPU-ul e mort și fiecare probă ar costa ~13 s de
+  // procesor pe rezervă, în loc de ~0,25. Nu se reîncearcă — nu se schimbă
+  // singur. Rămâne Alt+A, întreg.
+  if(d&&d.ok&&d.gata&&!d.trezire){
+    console.warn('trezire: nu e disponibilă, rămâne Alt+A');
+    urecheaTace('trezirea nu e pornită');
+    return;
+  }
+
+  /* Serverul răspunde, dar dictarea nu e gata. Două lucruri diferite, și
+     serverul le deosebește: `se_incarca` înseamnă „mai așteaptă", lipsa lui
+     înseamnă „a picat, și n-are de ce să se schimbe singur". Fără distincție,
+     o compilare căzută ar ține „pornesc…" pe ecran, iar o încărcare lentă ar fi
+     declarată eșec exact înainte să reușească. */
+  if(d&&d.ok&&!d.gata&&!d.se_incarca){
+    console.warn('dictare: nu s-a încărcat —', d.motiv||'fără motiv');
+    urecheaTace('dictarea nu e pornită');
+    return;
+  }
+  // Plafonul se consumă DOAR când n-a răspuns nimeni: acolo nu există semnal,
+  // deci nu există altceva de numărat decât încercările.
+  if(!(d&&d.ok)&&n>=TREZIRE_REINCERCARI){
+    urecheaTace('dictarea nu e pornită');
+    return;
+  }
+  // Mai vine. Motivul se golește ca eticheta să cadă pe implicitul care merge
+  // cu culoarea („motorul pornește" cât e rece și el, altfel „urechea
+  // pornește") — un singur text pentru o singură stare, în loc de „pornesc…"
+  // pe lângă el.
+  urecheaTace('');
+  setTimeout(()=>armeazaTrezirea(n+1),TREZIRE_PAUZA);
+}
+armeazaTrezirea();
+
+</script>
+</body>
+</html>

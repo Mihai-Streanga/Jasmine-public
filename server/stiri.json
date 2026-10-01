@@ -1,0 +1,48 @@
+{
+  "_": "SENSORS — sursele de știri și plafoanele. Se citește la FIECARE raport, deci un site nou apare fără repornirea serverului. Formate acceptate: rss, sitemap-news. Vezi server/stiri.py.",
+
+  "ore_implicit": 24,
+  "plafon_prezentare": 12,
+  "max_catalog": 150,
+  "max_panou": 40,
+  "lungime_extras": 180,
+
+  "cai_economice": ["economie", "business", "economy", "markets", "finante"],
+  "cai_excluse": ["digistoria", "magazin", "/video/"],
+
+  "surse": [
+    {
+      "nume": "Digi24 Economie",
+      "url": "https://www.digi24.ro/rss/economie",
+      "fel": "rss",
+      "categorie": "economie",
+      "limba": "ro",
+      "max": 40
+    },
+    {
+      "nume": "Economedia",
+      "url": "https://economedia.ro/feed/",
+      "fel": "rss",
+      "categorie": "economie",
+      "limba": "ro",
+      "max": 40
+    },
+    {
+      "nume": "Digi24",
+      "url": "https://www.digi24.ro/rss",
+      "fel": "rss",
+      "categorie": "general",
+      "limba": "ro",
+      "max": 80
+    },
+    {
+      "nume": "CNN",
+      "_nota": "RSS-ul CNN e mort (edition.rss stă în aprilie 2023, business în februarie 2017) și răspunde 200. Singura ușă vie e sitemap-ul de știri.",
+      "url": "https://edition.cnn.com/sitemap/news.xml",
+      "fel": "sitemap-news",
+      "categorie": "general",
+      "limba": "en",
+      "max": 60
+    }
+  ]
+}

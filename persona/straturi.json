@@ -1,0 +1,20 @@
+{
+  "sky": {
+    "model": "sky",
+    "eticheta": "Sky",
+    "asteptare": "Sky verifică…",
+    "prompt": "persona/sky.md"
+  },
+  "socrate": {
+    "model": "-socrate",
+    "eticheta": "Socrate",
+    "asteptare": "Socrate scrie…",
+    "prompt": "persona/socrate.md"
+  },
+  "ramana": {
+    "model": "ramana",
+    "eticheta": "Ramana",
+    "asteptare": "Ramana…",
+    "prompt": "persona/ramana.md"
+  }
+}

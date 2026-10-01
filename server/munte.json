@@ -1,0 +1,26 @@
+{
+  "_": "MUNTELE — clipurile camerei lui Ramana. Se citește la FIECARE cerere, deci ordinea se schimbă fără repornirea serverului. Fișierele NU stau în depozit: sunt mari și se redescarcă, ca modelele Whisper. Se aduc cu `py server\\descarca-munte.py`.",
+  "folder": "media/munte",
+  "_unelte": "Numai descarca-munte.py citeste cheia asta; serverul n-o atinge. yt-dlp.exe si ffmpeg.exe stau AICI, ca binare de sine statatoare: nu sunt dependente ale serverului, deci nu intra in requirements.txt.",
+  "unelte": "media/unelte",
+  "_volum": "Sonoritate medie. 0 = mut, 1 = tot. Puntea o citește de aici; nu e scrisă în punte.html, ca să se poată schimba fără să se atingă pagina.",
+  "volum": 0.3,
+  "_clipuri": "Ordinea de aici e ordinea în care curg, iar prima intrare e cea de plecare. După ultima se reia de la prima. `fisier` e numele de pe disc, nu titlul: titlul se schimbă la sursă, numele nu.",
+  "clipuri": [
+    {
+      "titlu": "Ramana Maharshi — filmul original",
+      "sursa": "https://www.youtube.com/watch?v=TUVoin53Mus",
+      "fisier": "1-ramana-maharshi.mp4"
+    },
+    {
+      "titlu": "Omkara — Into Your Heart · Arunachala",
+      "sursa": "https://www.youtube.com/watch?v=0ZREFKapqQk",
+      "fisier": "2-omkara-arunachala.mp4"
+    },
+    {
+      "titlu": "Fluss der Liebe (River of Love) — Mooji",
+      "sursa": "https://www.youtube.com/watch?v=USDnUG1oCT8",
+      "fisier": "3-river-of-love-mooji.mp4"
+    }
+  ]
+}
