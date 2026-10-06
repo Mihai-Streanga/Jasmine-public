@@ -178,7 +178,7 @@ INFO:     Uvicorn running on http://127.0.0.1:8010 (Press CTRL+C to quit)
 Writing to SHIP'S LOG (`POST /api/jurnal`). The server, not the browser, sets the time:
 
 ```text
-{"cand":"2026-10-01T13:17:18","text":"Prototipul Atlas rulează pe datele de test."}
+{"cand":"2026-10-01T13:17:18","text":"Demo-ul SkyRoll rulează pe datele sintetice."}
 {"cand":"2026-10-01T13:17:19","text":"Agent 051: briefingul de dimineață citit, două anunțuri de deschis."}
 {"cand":"2026-10-01T13:17:19","text":"Revizuire de cod pentru modulul de import, mâine la 10:00."}
 ```
@@ -207,15 +207,17 @@ Writing to SHIP'S LOG (`POST /api/jurnal`). The server, not the browser, sets th
 }
 ```
 
-`GET /api/proiecte` reads the ENGINEERING list from `date/proiecte.json` (fictional projects):
+`GET /api/proiecte` reads the ENGINEERING list from `date/proiecte.json`:
 
 ```json
 {
     "ok": true,
     "proiecte": [
-        {"n": "Atlas", "s": "1 modul prototip funcțional / 5 arhitectură definită", "u": "28 iul"},
         {"n": "Agent 051", "s": "pipeline live", "u": "28 iul"},
-        {"n": "JA.S.Mine", "s": "trei straturi · dictare, cele două cuvinte, MUNTELE", "u": "24 aug"}
+        {"n": "JA.S.Mine", "s": "trei straturi · dictare, cele două cuvinte, MUNTELE", "u": "24 aug"},
+        {"n": "Iris", "s": "dictare vocală locală pentru Windows · Whisper pe CPU sau iGPU Intel, offline", "u": "2 oct"},
+        {"n": "Mih.AI", "s": "geamăn digital vocal · partener care contrazice, vorbește ca autorul din dosarul de dovezi", "u": "5 oct"},
+        {"n": "SkyRoll", "s": "vitrină publică · demo de verificare a statului de salarii pe date sintetice", "u": "6 oct"}
     ]
 }
 ```
