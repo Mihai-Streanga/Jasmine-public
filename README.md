@@ -14,6 +14,20 @@ JA.S.Mine is the front end of [Agent 051](https://github.com/Mihai-Streanga/Agen
 separate program that reads job alert emails and ranks the listings. The RECON room and Sky's
 job tools talk to it over MCP; JA.S.Mine asks, the agent keeps its own data.
 
+## What makes it reliable
+
+- **Facts from code, words from the model.** Mail, news, the log and project status are read by
+  code and tools; the model only phrases them, so it cannot invent a fact.
+- **It answers only at home.** The server listens on `127.0.0.1` and refuses any request whose
+  `Host` or `Origin` is not its own, so another web page cannot drive it; a test proves it.
+  Links from outside feeds become links only when they are `http(s)`.
+- **Nothing is lost on a crash.** Conversations and the log are written to a temporary file and
+  swapped in atomically, so an interrupted write leaves the previous version whole.
+- **Every part says why it is down.** Each back end reports whether it is alive, where it was
+  looked for and why it failed, so a dark room always shows its reason.
+- **Private by default.** Dictation runs on the laptop itself and no audio leaves the machine;
+  the persona files on disk, not the chat engine's settings, are the source of truth.
+
 > Code comments are in Romanian. So are identifiers, UI texts, prompts and configuration keys.
 
 ## Screenshots
@@ -267,6 +281,16 @@ Runtime data (log, conversations, reports) is written under `date/` and is not v
 - **No streaming:** answers arrive whole.
 - **Closing with × stops Docker Desktop**, including any other containers you run.
 - The UI, prompts and messages are in Romanian.
+
+## How it was built
+
+JA.S.Mine was built with Claude Code, by a domain expert working as architect and judge of every
+result, on the [Streanga Method](https://github.com/Mihai-Streanga/streanga-method-for-claude).
+Brought onto the method, it showed the largest saving of the six projects: the cost of starting
+a working session fell by three quarters. Its first quality review under the method read the code
+for what happens when something fails, and everything it found was fixed the same morning: the
+atomic writes, the home-only server and the link check above all came from it. Those findings
+then became a standing part of the method's quality review for every project.
 
 ## License
 
