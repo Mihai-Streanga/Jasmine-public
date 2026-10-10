@@ -290,7 +290,8 @@ Brought onto the method, it showed the largest saving of the six projects: the c
 a working session fell by three quarters. Its first quality review under the method read the code
 for what happens when something fails, and everything it found was fixed the same morning: the
 atomic writes, the home-only server and the link check above all came from it. Those findings
-then became a standing part of the method's quality review for every project.
+then became a standing part of the method's quality review for every project. The design
+decisions, each with its reason, are in [docs/DESIGN.md](docs/DESIGN.md).
 
 ## License
 
