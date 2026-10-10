@@ -1,5 +1,7 @@
 # JA.S.Mine
 
+[![tests](https://github.com/Mihai-Streanga/Jasmine-public/actions/workflows/tests.yml/badge.svg)](https://github.com/Mihai-Streanga/Jasmine-public/actions/workflows/tests.yml)
+
 JA.S.Mine is a personal AI assistant that runs on a Windows laptop as a full-screen "bridge": one
 page with a map of rooms, each room a single job (mail report, news, a log of facts, a job-search
 agent, three conversation rooms). It answers to three layers built on Claude: **Sky** gives facts
@@ -292,6 +294,10 @@ for what happens when something fails, and everything it found was fixed the sam
 atomic writes, the home-only server and the link check above all came from it. Those findings
 then became a standing part of the method's quality review for every project. The design
 decisions, each with its reason, are in [docs/DESIGN.md](docs/DESIGN.md).
+
+The history here is short because this repository is a copy derived from the private working
+repository, which keeps the full history and the personal data left out of the copy: 243 commits,
+from July to October 2026 (read on 10 October 2026).
 
 ## License
 

@@ -1,0 +1,26 @@
+name: tests
+
+# Windows, like the project. No test needs a key, a mailbox or the network; test_recon.py
+# is skipped, with the reason, without a running Agent 051.
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  tests:
+    runs-on: windows-latest
+    env:
+      PYTHONUTF8: "1"
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.14"
+          cache: pip
+      - run: python -m pip install -r requirements.txt
+      - shell: bash
+        run: |
+          status=0
+          for t in tests/test_*.py; do echo "== $t"; python "$t" || status=1; done
+          exit $status
